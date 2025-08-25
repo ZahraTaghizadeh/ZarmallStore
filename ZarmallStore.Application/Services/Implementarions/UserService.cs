@@ -11,9 +11,11 @@ namespace ZarmallStore.Application.Services.Implementarions
     {
         #region CTOR
         private readonly IGenericRepository<User> _userRepository;
-        public UserService(IGenericRepository<User> userRepository)
+        private readonly ISmsService _smsService;
+        public UserService(IGenericRepository<User> userRepository, ISmsService smsService)
         {
             _userRepository = userRepository;
+            _smsService = smsService;
         }
         public async ValueTask DisposeAsync()
         {
@@ -34,14 +36,16 @@ namespace ZarmallStore.Application.Services.Implementarions
                 user.MobileActivationNumber = new Random().Next(10000, 99999).ToString();
                 _userRepository.EditEntity(user);
                 await _userRepository.SaveAsync();
+                await _smsService.SendVerificationSms(dto.MobileNumber, user.MobileActivationNumber);
             }
-            var newuser = new User
+            var newUser = new User
             {
                 MobileNumber = dto.MobileNumber,
                 MobileActivationNumber = new Random().Next(10000, 99999).ToString()
             };
-            await _userRepository.AddEntity(newuser);
+            await _userRepository.AddEntity(newUser);
             await _userRepository.SaveAsync();
+            await _smsService.SendVerificationSms(dto.MobileNumber, newUser.MobileActivationNumber);
         }
 
 
@@ -55,9 +59,16 @@ namespace ZarmallStore.Application.Services.Implementarions
             throw new NotImplementedException();
         }
 
-        public Task<EditUserInfoDTO> GetEditUserDetail(long userId)
+        public async Task<EditUserInfoDTO> GetEditUserDetail(long userId)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetEntityById(userId);
+            return new EditUserInfoDTO
+            {
+                Address = user.Address,
+                Email = user.Email,
+                FullName = user.FullName,
+                PostCode = user.PostCode
+            };
         }
 
         public Task<UserDetailsDTO> GetUserDetails(long userId)
@@ -67,9 +78,14 @@ namespace ZarmallStore.Application.Services.Implementarions
 
 
 
-        public Task<bool> SendActivationSms(string mobile)
+        public async Task<bool> SendActivationSms(string mobile)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.MobileNumber == mobile);
+            if (user == null)
+                return false;
+            user.MobileActivationNumber = new Random().Next(10000,99999).ToString();
+            await _smsService.SendVerificationSms(mobile,user.MobileActivationNumber);
+            return true;
         }
 
         #endregion
