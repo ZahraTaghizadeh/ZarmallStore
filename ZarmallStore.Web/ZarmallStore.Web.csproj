@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ZarmallStore.Application\ZarmallStore.Application.csproj" />
     <ProjectReference Include="..\ZarmallStore.Data\ZarmallStore.Data.csproj" />
   </ItemGroup>
 

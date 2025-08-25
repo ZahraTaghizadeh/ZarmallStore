@@ -8,5 +8,7 @@ namespace ZarmallStore.Data.DTOS.Account
         [MaxLength(11,ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
         [MinLength(11, ErrorMessage = "{0} نمی تواند بیشتر از {1}  باشد")]
         public string MobileNumber { get; set; }
+        public string? ReturnUrl { get; set; }
     }
+
 }

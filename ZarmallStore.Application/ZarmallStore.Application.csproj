@@ -10,8 +10,13 @@
     <PackageReference Include="KavenegarDotNetCore" Version="1.0.7" />
     <PackageReference Include="LazZiya.ImageResize" Version="4.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZarmallStore.Data\ZarmallStore.Data.csproj" />
   </ItemGroup>
 
 </Project>
