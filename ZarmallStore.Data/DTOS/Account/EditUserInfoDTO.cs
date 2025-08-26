@@ -4,6 +4,7 @@ namespace ZarmallStore.Data.DTOS.Account
 {
     public class EditUserInfoDTO
     {
+        public long UserId { get; set; }
         [Display(Name = "نام و نام خانوادگی")]
         [Required(ErrorMessage = "لطفا {.} را وارد کنید")]
         [MaxLength(12, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]

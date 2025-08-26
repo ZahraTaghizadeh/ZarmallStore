@@ -54,9 +54,15 @@ namespace ZarmallStore.Application.Services.Implementarions
             return await _userRepository.GetQuery().AnyAsync(u => u.MobileNumber == mobile);
         }
 
-        public Task EditUserDetail(EditUserInfoDTO dto)
+        public async Task EditUserDetail(EditUserInfoDTO dto)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetEntityById(dto.UserId);
+            user.Address = dto.Address;
+            user.Email = dto.Email;
+            user.FullName = dto.FullName;
+            user.PostCode = dto.PostCode;
+            _userRepository.EditEntity(user);
+            await _userRepository.SaveAsync();
         }
 
         public async Task<EditUserInfoDTO> GetEditUserDetail(long userId)
@@ -64,6 +70,7 @@ namespace ZarmallStore.Application.Services.Implementarions
             var user = await _userRepository.GetEntityById(userId);
             return new EditUserInfoDTO
             {
+                UserId = userId,
                 Address = user.Address,
                 Email = user.Email,
                 FullName = user.FullName,
@@ -71,9 +78,22 @@ namespace ZarmallStore.Application.Services.Implementarions
             };
         }
 
-        public Task<UserDetailsDTO> GetUserDetails(long userId)
+        public async Task<UserDetailsDTO> GetUserDetails(long userId)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetEntityById(userId);
+            return new UserDetailsDTO
+            {
+                Id = userId,
+                Address = user.Address,
+                Email = user.Email,
+                FullName = user.FullName,
+                PostCode = user.PostCode,
+                MobileNumber = user.MobileNumber,
+                CreatDate = user.CreatDate,
+                LastUpdateDate = user.LastUpdateDate,
+                IsDeleted = user.IsDeleted,
+                MobileActivationNumber = user.MobileActivationNumber
+            };
         }
 
 
@@ -83,8 +103,8 @@ namespace ZarmallStore.Application.Services.Implementarions
             var user = await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.MobileNumber == mobile);
             if (user == null)
                 return false;
-            user.MobileActivationNumber = new Random().Next(10000,99999).ToString();
-            await _smsService.SendVerificationSms(mobile,user.MobileActivationNumber);
+            user.MobileActivationNumber = new Random().Next(10000, 99999).ToString();
+            await _smsService.SendVerificationSms(mobile, user.MobileActivationNumber);
             return true;
         }
 

@@ -21,4 +21,8 @@
     <ProjectReference Include="..\ZarmallStore.Data\ZarmallStore.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Site\" />
+  </ItemGroup>
+
 </Project>

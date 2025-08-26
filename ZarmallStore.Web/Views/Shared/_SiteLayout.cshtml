@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html lang="fa_IR" dir="rtl">
+<head>
+    <partial name="_SiteMetaTags" />
+    <partial name="_SiteHeaderRef" />
+    @RenderSection("SiteHeaderSection", false)
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    @await Component.InvokeAsync("SiteHeader")
+    @RenderBody()
+    @await Component.InvokeAsync("SiteFooter")
+    @await Component.InvokeAsync("HomeCartSection")
+    <partial name="_SiteMobileMenu" />
+    <partial name="_SiteFooterRef" />
+    @RenderSection("SiteFooterSection", false)
+</body>
+</html>
