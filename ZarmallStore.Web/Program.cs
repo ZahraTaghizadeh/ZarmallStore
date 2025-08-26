@@ -1,7 +1,16 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using ZarmallStore.Application.Services.Implementarions;
+using ZarmallStore.Application.Services.Interface;
 using ZarmallStore.Data.Context;
+using ZarmallStore.Data.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//DI
+builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+builder.Services.AddScoped<IUserService , UserService>();
+builder.Services.AddScoped<ISmsService, SmsService>();
 
 //Db configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
