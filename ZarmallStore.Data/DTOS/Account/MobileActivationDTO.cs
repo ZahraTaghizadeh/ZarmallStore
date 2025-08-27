@@ -2,7 +2,7 @@
 
 namespace ZarmallStore.Data.DTOS.Account
 {
-    public class MobileActivationDTO
+    public class MobileActivationDTO : CaptchaDTO
     {
         [Display(Name = "کد فعالسازی")]
         [Required(ErrorMessage = "لطفا {.} را وارد کنید")]
@@ -10,6 +10,7 @@ namespace ZarmallStore.Data.DTOS.Account
         [MinLength(5, ErrorMessage = "{0} نمی تواند بیشتر از {1}  باشد")]
         public string ActivationCode { get; set; }
         public string? ReturnUrl { get; set; }
+        public string Mobile { get; set; }
     }
     public enum ActivationResult
     {

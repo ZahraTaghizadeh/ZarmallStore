@@ -1,5 +1,8 @@
 ﻿using GoogleReCaptcha.V3.Interface;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ZarmallStore.Application.Services.Interface;
 using ZarmallStore.Data.DTOS.Account;
 
@@ -42,8 +45,49 @@ namespace ZarmallStore.Web.Controllers
         [HttpPost("authorization"), ValidateAntiForgeryToken]
         public async Task<IActionResult> MobileAuthorization(MobileActivationDTO dto)
         {
-            await _userService.RegisterOrLoginUser(dto);
-            return RedirectToAction("MobileAuthorization", new { returnUrl = dto.ReturnUrl });
+            #region Captcha Validation
+            if(!await _captchaValidator.IsCaptchaPassedAsync(dto.Token))
+            {
+                TempData[ErrorMessage] = "اعتبارسنجی کپچا موفقیت آمیز نبود. لطفا vpn خود را خاموش کنید.";
+                return View();
+            }
+            #endregion
+
+            if(ModelState.IsValid)
+            {
+                var res = await _userService.CheckMobileAuthorization(dto);
+                if(!res)
+                {
+                    TempData[ErrorMessage] = "کد اعتبارسنجی صحیح نمی باشد.";
+                    return View();
+                }
+                var user = await _userService.GetUserByMobile(dto.Mobile);
+                if (user == null) return NotFound();
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.MobileNumber),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                var properties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                };
+                await HttpContext.SignInAsync(principal, properties);
+                TempData[SuccessMessage] = "خوش آمدی!";
+
+                if(!string.IsNullOrEmpty(dto.ReturnUrl) && Url.IsLocalUrl(dto.ReturnUrl))
+                {
+                    return Redirect(dto.ReturnUrl);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            TempData[ErrorMessage] = "لطفا خطاهای زیر را رفع کنید.";
+            return View();
         }
         #endregion
     }

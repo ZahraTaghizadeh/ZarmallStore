@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace ZarmallStore.Data.DTOS.Account
 {
-    public class RegisterUserDTO
+    public class RegisterUserDTO : CaptchaDTO
     {
         [Display(Name = "شماره موبایل")]
         [Required(ErrorMessage = "لطفا {.} را وارد کنید")]

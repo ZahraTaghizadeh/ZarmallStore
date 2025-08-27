@@ -2,7 +2,7 @@
 
 namespace ZarmallStore.Data.DTOS.Account
 {
-    public class EditUserInfoDTO
+    public class EditUserInfoDTO : CaptchaDTO
     {
         public long UserId { get; set; }
         [Display(Name = "نام و نام خانوادگی")]

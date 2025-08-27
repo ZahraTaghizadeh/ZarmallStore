@@ -48,7 +48,6 @@ namespace ZarmallStore.Application.Services.Implementarions
             await _smsService.SendVerificationSms(dto.MobileNumber, newUser.MobileActivationNumber);
         }
 
-
         public async Task<bool> CheckUserExistByMobile(string mobile)
         {
             return await _userRepository.GetQuery().AnyAsync(u => u.MobileNumber == mobile);
@@ -96,8 +95,6 @@ namespace ZarmallStore.Application.Services.Implementarions
             };
         }
 
-
-
         public async Task<bool> SendActivationSms(string mobile)
         {
             var user = await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.MobileNumber == mobile);
@@ -106,6 +103,17 @@ namespace ZarmallStore.Application.Services.Implementarions
             user.MobileActivationNumber = new Random().Next(10000, 99999).ToString();
             await _smsService.SendVerificationSms(mobile, user.MobileActivationNumber);
             return true;
+        }
+
+        public async Task<bool> CheckMobileAuthorization(MobileActivationDTO dto)
+        {
+            var user = await GetUserByMobile(dto.Mobile);
+            return dto.ActivationCode == user.MobileNumber;
+        }
+
+        public async Task<User?> GetUserByMobile(string mobile)
+        {
+            return await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.MobileNumber == mobile);
         }
 
         #endregion
