@@ -90,5 +90,12 @@ namespace ZarmallStore.Web.Controllers
             return View();
         }
         #endregion
+
+        [Route("log-out")]
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
