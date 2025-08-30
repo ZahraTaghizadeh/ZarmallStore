@@ -108,7 +108,9 @@ namespace ZarmallStore.Application.Services.Implementarions
         public async Task<bool> CheckMobileAuthorization(MobileActivationDTO dto)
         {
             var user = await GetUserByMobile(dto.Mobile);
-            return dto.ActivationCode == user.MobileNumber;
+            if (user == null) return false;
+            var activationCode = $"{dto.ActivationCodePart1}{dto.ActivationCodePart2}{dto.ActivationCodePart3}{dto.ActivationCodePart4}{dto.ActivationCodePart5}";
+            return activationCode == user.MobileNumber;
         }
 
         public async Task<User?> GetUserByMobile(string mobile)

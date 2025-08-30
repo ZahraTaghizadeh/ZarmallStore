@@ -31,15 +31,16 @@ namespace ZarmallStore.Web.Controllers
         public async Task<IActionResult> RegisterOrLogin(RegisterUserDTO dto)
         {
              await _userService.RegisterOrLoginUser(dto);
-            return RedirectToAction("MobileAuthorization" , new { returnUrl = dto.ReturnUrl });
+            return RedirectToAction("MobileAuthorization" , new { returnUrl = dto.ReturnUrl ,mobile = dto.MobileNumber});
         }
         #endregion
 
         #region MobileAuthorization
         [HttpGet("authorization")]
-        public async Task<IActionResult> MobileAuthorization(string? returnUrl = null)
+        public async Task<IActionResult> MobileAuthorization(string mobile , string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Mobile"] = mobile;
             return View();
         }
         [HttpPost("authorization"), ValidateAntiForgeryToken]
@@ -91,11 +92,28 @@ namespace ZarmallStore.Web.Controllers
         }
         #endregion
 
+        #region Resend Verification Code
+        [HttpGet("resend-verification-code")]
+        public async  Task<IActionResult> ResendVerificationCode(string mobileNumber)
+        {
+            var res = await _userService.SendActivationSms(mobileNumber);
+            if (res) return RedirectToAction("MobileAuthorization");
+            TempData[ErrorMessage] = "کاربری یافت نشد.";
+            return RedirectToAction("MobileAuthorization");
+
+        }
+        #endregion
+
+
+        #region Log Out
+
         [Route("log-out")]
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        #endregion
+
     }
 }

@@ -1,5 +1,119 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ZarmallStore.Data.DTOS.Account.MobileActivationDTO
 @{
+    ViewData["Title"] = "اعتبارسنجی شماره موبایل";
+    var mobile = (string)ViewData["Mobile"];
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="FA-IR" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="/Site/plugin/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/Site/plugin/go-to-top/style.css">
+    <link rel="stylesheet" href="/Site/plugin/rasta-contact/style.css">
+    <link rel="stylesheet" href="/Site/css/style.css">
+    <link rel="stylesheet" href="/Site/css/responsive.css">
+
+</head>
+
+<body class="bg-auth">
+
+    <section class="content vh-100">
+        <div class="container-fluid h-100">
+            <div class="auth h-100 d-flex align-items-center">
+                <div class="container-fluid">
+                    <div class="auth-items">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-4">
+                                <form asp-area="" asp-controller="Account" asp-action="MobileAuthorization" method="post">
+                                    <div class="auth-form shadow-xl rounded-3  mt-5 bg-white">
+                                        <div class="auth-form-title header-logo d-flex align-items-center justify-content-between title-panel mb-4 slider-title-desc-center">
+                                            <h2 class="text-center h4 text-muted title-font">ورود</h2>
+                                            <a href="">
+                                                <img src="/Site/image/logo.png" class="auth-logo" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="alert text-center alert-success">
+                                            یک کد برای شما پیامک شد لطفا آن را وارد کنید
+                                        </div>
+                                        <div id="otp-input">
+                                            <label>
+                                                <input asp-for="ActivationCodePart1" placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no"
+                                                       pattern="\d*" />
+                                            </label>
+                                            <label>
+                                                <input asp-for="ActivationCodePart2" placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no"
+                                                       pattern="\d*" />
+                                            </label>
+                                            <label>
+                                                <input asp-for="ActivationCodePart3" placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no"
+                                                       pattern="\d*" />
+                                            </label>
+                                            <label>
+                                                <input asp-for="ActivationCodePart4" placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no"
+                                                       pattern="\d*" />
+                                            </label>
+                                            <label>
+                                                <input asp-for="ActivationCodePart5" placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no"
+                                                       pattern="\d*" />
+                                            </label>
+                                            <input id="otp-value" placeholder="_" type="hidden" name="otp" />
+                                        </div>
+                                        <!-- Countdown timer html -->
+                                        <div class="countDownContainer">
+                                            <div class="countdown-bar" id="countdownB">
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mt-4">
+                                            <button type="submit" id="submit" class="btn-login w-100 btn text-white rounded-3">
+                                                وورد به
+                                                سایت
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <p class="loginTermsDesc lh-lg mt-3">
+                                    با ورود و یا ثبت نام در مهیار شما <a class="underlined main-color-one-color fw-bold" href="/rules/">
+                                        شرایط و
+                                        قوانین
+                                    </a> استفاده از سرویس‌های سایت مهیار و <a class="underlined main-color-one-color fw-bold" href="/privacy-polices/">
+                                        قوانین حریم
+                                        خصوصی
+                                    </a> آن را می‌پذیرید.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/Site/js/modernizr-3.11.2.min.js"></script>
+    <script src="/Site/js/jquery-3.7.1.min.js"></script>
+    <script src="/Site/js/bootstrap.bundle.min.js"></script>
+    <script src="/Site/js/app.js"></script>
+
+    <!-- otp sms -->
+    <script src="/Site/plugin/otp-sms/otp-input.js"></script>
+    <script src="/Site/plugin/otp-sms/otp-loader.js"></script>
+
+    <!-- Run Countdown Timer Script -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            countdown('countdownB', 0, 0, 0, 120);
+        });
+    </script>
+    <!-- End script -->
+
+</body>
+
+</html>
