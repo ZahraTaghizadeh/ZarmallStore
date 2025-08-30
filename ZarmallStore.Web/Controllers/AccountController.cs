@@ -30,7 +30,14 @@ namespace ZarmallStore.Web.Controllers
         [HttpPost("register"),ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterOrLogin(RegisterUserDTO dto)
         {
-             await _userService.RegisterOrLoginUser(dto);
+            #region Captcha Validation
+            if (!await _captchaValidator.IsCaptchaPassedAsync(dto.Token))
+            {
+                TempData[ErrorMessage] = "اعتبارسنجی کپچا موفقیت آمیز نبود. لطفا vpn خود را خاموش کنید.";
+                return View();
+            }
+            #endregion
+            await _userService.RegisterOrLoginUser(dto);
             return RedirectToAction("MobileAuthorization" , new { returnUrl = dto.ReturnUrl ,mobile = dto.MobileNumber});
         }
         #endregion

@@ -10,7 +10,7 @@ namespace ZarmallStore.Data.Context
 
         }
         #region Account
-        //public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         #endregion
 
         #region FilterData
@@ -21,8 +21,8 @@ namespace ZarmallStore.Data.Context
                 .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
             foreach (var fk in cascadeFKs)
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
-            //modelBuilder.Entity<User>()
-            //    .HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<User>()
+                .HasQueryFilter(u => !u.IsDeleted);
         }
         #endregion
     }

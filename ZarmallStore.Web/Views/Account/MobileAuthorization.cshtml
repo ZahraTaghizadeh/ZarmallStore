@@ -32,7 +32,7 @@
                             <div class="col-lg-4">
                                 <form asp-area="" asp-controller="Account" asp-action="MobileAuthorization" method="post">
                                     <input type="hidden" asp-for="Token" id="captchaInput" />
-                                    <input asp-for="Mobile" value="@mobile" />
+                                    <input asp-for="Mobile" type="hidden" value="@mobile" />
                                     <div class="auth-form shadow-xl rounded-3  mt-5 bg-white">
                                         <div class="auth-form-title header-logo d-flex align-items-center justify-content-between title-panel mb-4 slider-title-desc-center">
                                             <h2 class="text-center h4 text-muted title-font">ورود</h2>

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Mono.TextTemplating;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using ZarmallStore.Application.Services.Implementarions;
 using ZarmallStore.Application.Services.Interface;
 using ZarmallStore.Data.Context;
@@ -46,6 +48,9 @@ builder.Services.AddAuthentication(options =>
     options.SlidingExpiration = true;
 });
 
+//Encoder
+builder.Services.AddSingleton<HtmlEncoder>(HtmlEncoder
+    .Create(allowedRanges: new[] { UnicodeRanges.BasicLatin, UnicodeRanges.Arabic }));
 
 builder.Services.AddControllersWithViews();
 
