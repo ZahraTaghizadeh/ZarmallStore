@@ -31,6 +31,8 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-4">
                                 <form asp-area="" asp-controller="Account" asp-action="MobileAuthorization" method="post">
+                                    <input type="hidden" asp-for="Token" id="captchaInput" />
+                                    <input asp-for="Mobile" value="@mobile" />
                                     <div class="auth-form shadow-xl rounded-3  mt-5 bg-white">
                                         <div class="auth-form-title header-logo d-flex align-items-center justify-content-between title-panel mb-4 slider-title-desc-center">
                                             <h2 class="text-center h4 text-muted title-font">ورود</h2>
@@ -113,7 +115,60 @@
         });
     </script>
     <!-- End script -->
+    @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+    <script src="https://www.google.com/recaptcha/api.js?render=@Configuration["googleRecaptcha:SiteKey"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            window.grecaptcha.execute('@Configuration["googleRecaptcha:SiteKey"]', { action: 'home' }).then(function (token) {
+                $("#captchaInput").val(token);
+            })
+        })
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = document.querySelectorAll('#otp-input input[type="number"]');
+            const hiddenOtpInput = document.getElementById('otp-value');
 
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', function () {
+                    // just number 0 to 9
+                    this.value = this.value.replace(/[^0-9]/g, '');
+
+                    if (this.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+
+                    updateOtpValue;
+                });
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', function (e) {
+                    const pasteData = e.clipboardData.getData('text').trim();
+                    if (/^\d{5}$/.test(pasteData)) {
+                        for (let i = 0; i < inputs.length; i++) {
+                            inputs[i].value = pasteData[i];
+                        }
+                        inputs[inputs.length - 1].focus();
+                        updateOtpValue();
+                    }
+                    e.preventDefault();
+                });
+            });
+
+            function updateOtpValue() {
+                let otp = '';
+                inputs.forEach(input => {
+                    otp += input.value;
+                });
+                hiddenOtpInput.value = otp;
+            }
+        });
+    </script>
 </body>
 
 </html>

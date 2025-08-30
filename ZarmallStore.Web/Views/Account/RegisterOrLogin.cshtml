@@ -37,6 +37,7 @@
                                         </a>
                                     </div>
                                     <form asp-area="" asp-controller="Account" asp-action="RegisterOrLogin" method="post" id="form-auth" class="py-3">
+                                        <input type="hidden" asp-for="Token" id="captchaInput"/>
                                         <div class="comment-item mb-4">
                                             <input asp-for="MobileNumber" type="tel" class="form-control" id="username">
                                             <label for="username" class="form-label label-float">
@@ -72,6 +73,15 @@
     <script src="/Site/js/jquery-3.7.1.min.js"></script>
     <script src="/Site/js/bootstrap.bundle.min.js"></script>
     <script src="/Site/js/app.js"></script>
+    @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+    <script src="https://www.google.com/recaptcha/api.js?render=@Configuration["googleRecaptcha:SiteKey"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            window.grecaptcha.execute('@Configuration["googleRecaptcha:SiteKey"]', { action: 'home' }).then(function (token) {
+                $("#captchaInput").val(token);
+            })
+        })
+    </script>
 
 </body>
 
