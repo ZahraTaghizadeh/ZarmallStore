@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Entities\Order\" />
-    <Folder Include="Entities\ProductEntities\" />
   </ItemGroup>
 
 </Project>
