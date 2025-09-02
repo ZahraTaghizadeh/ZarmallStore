@@ -12,7 +12,7 @@ namespace ZarmallStore.Web.Controllers
     {
         #region CTOR
         private readonly IUserService _userService;
-        private readonly  ICaptchaValidator _captchaValidator;
+        private readonly ICaptchaValidator _captchaValidator;
         public AccountController(IUserService userService, ICaptchaValidator captchaValidator)
         {
             _userService = userService;
@@ -22,12 +22,12 @@ namespace ZarmallStore.Web.Controllers
 
         #region Register Or Login
         [HttpGet("register")]
-        public async Task<IActionResult> RegisterOrLogin(string? returnUrl =null)
+        public async Task<IActionResult> RegisterOrLogin(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
-        [HttpPost("register"),ValidateAntiForgeryToken]
+        [HttpPost("register"), ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterOrLogin(RegisterUserDTO dto)
         {
             #region Captcha Validation
@@ -38,13 +38,13 @@ namespace ZarmallStore.Web.Controllers
             }
             #endregion
             await _userService.RegisterOrLoginUser(dto);
-            return RedirectToAction("MobileAuthorization" , new { returnUrl = dto.ReturnUrl ,mobile = dto.MobileNumber});
+            return RedirectToAction("MobileAuthorization", new { returnUrl = dto.ReturnUrl, mobile = dto.MobileNumber });
         }
         #endregion
 
         #region MobileAuthorization
         [HttpGet("authorization")]
-        public async Task<IActionResult> MobileAuthorization(string mobile , string? returnUrl = null)
+        public async Task<IActionResult> MobileAuthorization(string mobile, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             ViewData["Mobile"] = mobile;
@@ -54,17 +54,17 @@ namespace ZarmallStore.Web.Controllers
         public async Task<IActionResult> MobileAuthorization(MobileActivationDTO dto)
         {
             #region Captcha Validation
-            if(!await _captchaValidator.IsCaptchaPassedAsync(dto.Token))
+            if (!await _captchaValidator.IsCaptchaPassedAsync(dto.Token))
             {
                 TempData[ErrorMessage] = "اعتبارسنجی کپچا موفقیت آمیز نبود. لطفا vpn خود را خاموش کنید.";
                 return View();
             }
             #endregion
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var res = await _userService.CheckMobileAuthorization(dto);
-                if(!res)
+                if (!res)
                 {
                     TempData[ErrorMessage] = "کد اعتبارسنجی صحیح نمی باشد.";
                     return View();
@@ -85,14 +85,13 @@ namespace ZarmallStore.Web.Controllers
                 await HttpContext.SignInAsync(principal, properties);
                 TempData[SuccessMessage] = "خوش آمدی!";
 
-                if(!string.IsNullOrEmpty(dto.ReturnUrl) && Url.IsLocalUrl(dto.ReturnUrl))
+                if (!string.IsNullOrEmpty(dto.ReturnUrl) && Url.IsLocalUrl(dto.ReturnUrl))
                 {
+                    TempData[SuccessMessage] = "خوش آمدی!";
                     return Redirect(dto.ReturnUrl);
                 }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                TempData[SuccessMessage] = "خوش آمدید.";
+                return RedirectToAction("Index", "Home");
             }
             TempData[ErrorMessage] = "لطفا خطاهای زیر را رفع کنید.";
             return View();
@@ -101,7 +100,7 @@ namespace ZarmallStore.Web.Controllers
 
         #region Resend Verification Code
         [HttpGet("resend-verification-code")]
-        public async  Task<IActionResult> ResendVerificationCode(string mobileNumber)
+        public async Task<IActionResult> ResendVerificationCode(string mobileNumber)
         {
             var res = await _userService.SendActivationSms(mobileNumber);
             if (res) return RedirectToAction("MobileAuthorization");

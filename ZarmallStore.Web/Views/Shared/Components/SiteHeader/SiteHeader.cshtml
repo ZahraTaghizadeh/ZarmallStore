@@ -381,10 +381,21 @@
                         <div class="d-flex align-items-center d-xl-none justify-content-end">
                             <div class="d-flex align-items-center justify-content-between top-header-call">
                                 <div class="auth-link">
-                                    <a asp-area="" asp-controller="Account" asp-action="RegisterOrLogin" asp class="auth-btn">
-                                        <i class="bi bi-person"></i>
-                                        <span class="fw-bold d-sm-inline-block d-none">ورود / عضویت</span>
-                                    </a>
+                                    @if(User.Identity.IsAuthenticated)
+                                    {
+                                        <a asp-area="" asp-controller="" asp-action="" asp class="auth-btn">
+                                            <i class="bi bi-person"></i>
+                                            <span class="fw-bold d-sm-inline-block d-none">حساب کاربری</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-area="" asp-controller="Account" asp-action="RegisterOrLogin" asp class="auth-btn">
+                                            <i class="bi bi-person"></i>
+                                            <span class="fw-bold d-sm-inline-block d-none">ورود / عضویت</span>
+                                        </a>
+                                    }
+                                    
                                 </div>
                                 <div class="cart-button ms-3">
                                     <a class="d-flex align-items-center h-100" data-bs-toggle="offcanvas"
@@ -703,10 +714,22 @@
                     <div class="d-flex align-items-center justify-content-end">
                         <div class="d-flex align-items-center justify-content-between top-header-call d-xl-flex d-none">
                             <div class="auth-link">
-                                <a asp-area="" asp-controller="Account" asp-action="RegisterOrLogin">
-                                    <i class="bi bi-person"></i>
-                                    <span class="fw-bold">ورود / عضویت</span>
-                                </a>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-area="" asp-controller="Account" asp-action="RegisterOrLogin">
+                                        <i class="bi bi-person"></i>
+                                        <span class="fw-bold">حساب کاربری</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-area="" asp-controller="" asp-action="">
+                                        <i class="bi bi-person"></i>
+                                        <span class="fw-bold">ورود / عضویت</span>
+                                    </a>
+                                }
+                                
+                               
                             </div>
                             <div class="cart-button ms-3">
                                 <a class="d-flex align-items-center h-100" data-bs-toggle="offcanvas"

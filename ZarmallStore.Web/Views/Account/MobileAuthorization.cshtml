@@ -30,7 +30,7 @@
                     <div class="auth-items">
                         <div class="row justify-content-center">
                             <div class="col-lg-4">
-                                <form asp-area="" asp-controller="Account" asp-action="MobileAuthorization" method="post">
+                                <form asp-area="" asp-controller="Account" asp-action="MobileAuthorization" method="post" id="otp-form">
                                     <input type="hidden" asp-for="Token" id="captchaInput" />
                                     <input asp-for="Mobile" type="hidden" value="@mobile" />
                                     <div class="auth-form shadow-xl rounded-3  mt-5 bg-white">
@@ -105,7 +105,6 @@
     <script src="/Site/js/app.js"></script>
 
     <!-- otp sms -->
-    <script src="/Site/plugin/otp-sms/otp-input.js"></script>
     <script src="/Site/plugin/otp-sms/otp-loader.js"></script>
 
     <!-- Run Countdown Timer Script -->
@@ -128,17 +127,22 @@
         document.addEventListener('DOMContentLoaded', function () {
             const inputs = document.querySelectorAll('#otp-input input[type="number"]');
             const hiddenOtpInput = document.getElementById('otp-value');
+            const form = document.getElementById('otp-form');
+
+            function updateOtpValue() {
+                let otp = '';
+                inputs.forEach(input => { otp += input.value; });
+                hiddenOtpInput.value = otp;
+                console.log("Hidden OTP value:", hiddenOtpInput.value);
+            }
 
             inputs.forEach((input, index) => {
                 input.addEventListener('input', function () {
-                    // just number 0 to 9
                     this.value = this.value.replace(/[^0-9]/g, '');
-
                     if (this.value.length === 1 && index < inputs.length - 1) {
                         inputs[index + 1].focus();
                     }
-
-                    updateOtpValue;
+                    updateOtpValue(); // ⚡ حتماً باید صدا زده شود
                 });
 
                 input.addEventListener('keydown', function (e) {
@@ -160,13 +164,18 @@
                 });
             });
 
-            function updateOtpValue() {
-                let otp = '';
-                inputs.forEach(input => {
-                    otp += input.value;
-                });
-                hiddenOtpInput.value = otp;
-            }
+            // submit فقط اگر OTP کامل باشد
+            form.addEventListener('submit', function (e) {
+                updateOtpValue();
+                const captchaInput = document.getElementById('captchaInput');
+                if (hiddenOtpInput.value.length !== 5) {
+                    e.preventDefault();
+                    alert("لطفا کد ۵ رقمی را کامل وارد کنید.");
+                } else if (!captchaInput.value) {
+                    e.preventDefault();
+                    alert("لطفا چند لحظه صبر کنید تا اعتبارسنجی کپچا انجام شود.");
+                }
+            });
         });
     </script>
 </body>
