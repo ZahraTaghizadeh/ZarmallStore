@@ -20,14 +20,14 @@ namespace ZarmallStore.Application.Services.Implementarions
         public ProductService(IGenericRepository<Product> productRepository, IGenericRepository<ProductCategory> categoryRepository, IGenericRepository<ProductColor> colorRepository, 
             IGenericRepository<ProductVariant> variantRepository, IGenericRepository<ProductComment> commentRepository, IGenericRepository<ProductSelectedCategory> selectedCategoryRepository, IGenericRepository<ProductFeature> featureRepository, IGenericRepository<ProductGallery> galleryRepository)
         {
-            _productRepository.productRepository;
-            _categoryRepository.categoryRepository;
-            _colorRepository.colorRepository;
-            _variantRepository.variantRepository;
-            _commentRepository.commentRepository;
-            _selectedCategoryRepository.selectedCategoryRepository;
-            _featureRepository.featureRepository;
-            _galleryRepository.galleryRepository;
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
+            _colorRepository = colorRepository;
+            _variantRepository = variantRepository;
+            _commentRepository = commentRepository;
+            _selectedCategoryRepository = selectedCategoryRepository;
+            _featureRepository = featureRepository;
+            _galleryRepository = galleryRepository;
         }
 
         public async ValueTask DisposeAsync()
