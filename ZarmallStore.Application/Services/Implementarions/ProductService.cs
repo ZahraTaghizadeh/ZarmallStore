@@ -17,7 +17,8 @@ namespace ZarmallStore.Application.Services.Implementarions
         private readonly IGenericRepository<ProductSelectedCategory> _selectedCategoryRepository;
         private readonly IGenericRepository<ProductFeature> _featureRepository;
         private readonly IGenericRepository<ProductGallery> _galleryRepository;
-        public ProductService(IGenericRepository<Product> productRepository, IGenericRepository<ProductCategory> categoryRepository, IGenericRepository<ProductColor> colorRepository, IGenericRepository<ProductVariant> variantRepository, IGenericRepository<ProductComment> commentRepository, IGenericRepository<ProductSelectedCategory> selectedCategoryRepository, IGenericRepository<ProductFeature> featureRepository, IGenericRepository<ProductGallery> galleryRepository)
+        public ProductService(IGenericRepository<Product> productRepository, IGenericRepository<ProductCategory> categoryRepository, IGenericRepository<ProductColor> colorRepository, 
+            IGenericRepository<ProductVariant> variantRepository, IGenericRepository<ProductComment> commentRepository, IGenericRepository<ProductSelectedCategory> selectedCategoryRepository, IGenericRepository<ProductFeature> featureRepository, IGenericRepository<ProductGallery> galleryRepository)
         {
             _productRepository.productRepository;
             _categoryRepository.categoryRepository;
@@ -106,15 +107,83 @@ namespace ZarmallStore.Application.Services.Implementarions
         }
         #endregion
 
+        #region Color
+        public Task<FilterColorDto> FilterColor(FilterColorDto filter)
+        {
+            throw new NotImplementedException();
+        }
+        public Task CreateColor(CreateColorDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<EditeColorDto> GetEditeColor(long colorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EditeColor(EditeColorDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteColor(long colorId)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Gallery
+        public Task CreateGallery(CreateGalleryDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<EditGalleryDto> GetEditGallery(long galleryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EditGallery(EditGalleryDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteGallery(long galleryId)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Feature
+        public Task<bool> DeleteFeature(long featureId)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Variant
 
 
+        public Task CreateProductVariant(CreateProductVariantDto dto)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task<EditProductVariantDto> GetEditeProductVariant(long VariantId)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task EditeProductVariant(EditProductVariantDto dto)
+        {
+            throw new NotImplementedException();
+        }
 
-
-
-
-
-
+        public Task<bool> DeleteProductVariant(long VariantId)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

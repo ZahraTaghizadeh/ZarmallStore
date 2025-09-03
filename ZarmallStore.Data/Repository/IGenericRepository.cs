@@ -4,6 +4,8 @@ namespace ZarmallStore.Data.Repository
 {
     public interface IGenericRepository<TEntity> : IAsyncDisposable where TEntity : BaseEntity
     {
+        object productRepository { get; set; }
+
         IQueryable<TEntity> GetQuery();
         Task<TEntity> GetEntityById(long id);
         Task AddEntity(TEntity entity);

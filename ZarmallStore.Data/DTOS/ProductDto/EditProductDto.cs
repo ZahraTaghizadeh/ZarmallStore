@@ -12,6 +12,7 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         public string ShortDescription { get; set; }
         public long BrandId { get; set; }
         public List<long> Categories { get; set; }
+        public List<ProductFeaturesDto>? ProductFeatures { get; set; }
     }
     public enum EditProductResult
     {
