@@ -1,8 +1,12 @@
-﻿using ZarmallStore.Application.Services.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using ZarmallStore.Application.Extention;
+using ZarmallStore.Application.Services.Interface;
+using ZarmallStore.Application.Utils;
 using ZarmallStore.Data.DTOS.ProductCategoryDto;
 using ZarmallStore.Data.DTOS.ProductDto;
 using ZarmallStore.Data.Entities.ProductEntities;
 using ZarmallStore.Data.Repository;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ZarmallStore.Application.Services.Implementarions
 {
@@ -15,10 +19,14 @@ namespace ZarmallStore.Application.Services.Implementarions
         private readonly IGenericRepository<ProductVariant> _variantRepository;
         private readonly IGenericRepository<ProductComment> _commentRepository;
         private readonly IGenericRepository<ProductSelectedCategory> _selectedCategoryRepository;
+        private readonly IGenericRepository<Brand> _brandRepository;
+        private readonly IGenericRepository<ProductSelectedBrand> _selectedBrandRepository;
         private readonly IGenericRepository<ProductFeature> _featureRepository;
         private readonly IGenericRepository<ProductGallery> _galleryRepository;
         public ProductService(IGenericRepository<Product> productRepository, IGenericRepository<ProductCategory> categoryRepository, IGenericRepository<ProductColor> colorRepository, 
-            IGenericRepository<ProductVariant> variantRepository, IGenericRepository<ProductComment> commentRepository, IGenericRepository<ProductSelectedCategory> selectedCategoryRepository, IGenericRepository<ProductFeature> featureRepository, IGenericRepository<ProductGallery> galleryRepository)
+            IGenericRepository<ProductVariant> variantRepository, IGenericRepository<ProductComment> commentRepository, IGenericRepository<ProductSelectedCategory> selectedCategoryRepository,
+            IGenericRepository<Brand> brandRepository, IGenericRepository<ProductSelectedBrand> selectedBrandRepository,
+            IGenericRepository<ProductFeature> featureRepository, IGenericRepository<ProductGallery> galleryRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
@@ -26,6 +34,8 @@ namespace ZarmallStore.Application.Services.Implementarions
             _variantRepository = variantRepository;
             _commentRepository = commentRepository;
             _selectedCategoryRepository = selectedCategoryRepository;
+            _brandRepository = brandRepository;
+            _selectedBrandRepository = selectedBrandRepository;
             _featureRepository = featureRepository;
             _galleryRepository = galleryRepository;
         }
@@ -40,6 +50,8 @@ namespace ZarmallStore.Application.Services.Implementarions
             await _selectedCategoryRepository.DisposeAsync();
             await _featureRepository.DisposeAsync();
             await _galleryRepository.DisposeAsync();
+            await _brandRepository.DisposeAsync();
+            await _selectedBrandRepository.DisposeAsync();
         }
         #endregion
 
@@ -54,9 +66,32 @@ namespace ZarmallStore.Application.Services.Implementarions
             throw new NotImplementedException();
         }
 
-        public Task CreateProduct(CreateProductDto dto)
+        public async Task<CreateProductResult> CreateProduct(CreateProductDto dto)
         {
-            throw new NotImplementedException();
+            var product = new Product
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                IsAvailable = dto.IsAvailable,
+                ShortDescription = dto.ShortDescription,
+            };
+
+            #region Main Image
+            var mainImageName = Guid.NewGuid().ToString("N") + Path.GetExtension(dto.MainImage.FileName);
+            var res = dto.MainImage.AddImageToServer(mainImageName, PathExtension.ProductImageServer,150 , 150 , PathExtension.ProductImageThumbServer);
+            if (res)
+            {
+                product.MainImageName = mainImageName;
+            }
+            else
+            {
+                return CreateProductResult.SavingMainImageFailed;
+            }
+            #endregion
+
+            await _productRepository.AddEntity(product);
+            await _productRepository.SaveAsync();
+            return CreateProductResult.Success;
         }
 
         public Task<bool> DeleteCategory(long categoryId)
@@ -68,7 +103,7 @@ namespace ZarmallStore.Application.Services.Implementarions
         {
             throw new NotImplementedException();
         }
-        public Task EditProduct(EditProductDto dto)
+        public Task<EditProductResult> EditProduct(EditProductDto dto)
         {
             throw new NotImplementedException();
         }
@@ -81,9 +116,27 @@ namespace ZarmallStore.Application.Services.Implementarions
             throw new NotImplementedException();
         }
 
-        public Task<ProductDetailDto> ProductDetail(long productId)
+        public async Task<ProductDetailDto> ProductDetail(long productId)
         {
-            throw new NotImplementedException();
+            var data = await _productRepository.GetEntityById(productId);
+            return new ProductDetailDto
+            {
+                Id = data.Id,
+                Title = data.Title,
+                IsDeleted = data.IsDeleted,
+                CreatDate = data.CreatDate,
+                Description = data.Description,
+                IsAvailable = data.IsAvailable,
+                MainImageName = data.MainImageName,
+                LastUpdateDate = data.LastUpdateDate,
+                ShortDescription = data.ShortDescription,
+                productVariants = await _variantRepository.GetQuery().Where(d => d.ProductId == productId).ToListAsync(),
+                ProductSelectedBrand = await _selectedBrandRepository.GetQuery().FirstOrDefaultAsync(d => d.ProductId == productId),
+                SelectedCategories = await _selectedCategoryRepository.GetQuery().Where(d => d.ProductId == productId).ToListAsync(),
+                ProductGalleries = await _galleryRepository.GetQuery().Where(d => d.ProductId == productId).ToListAsync(),
+                ProductComments = await _commentRepository.GetQuery().Where(d => d.ProductId == productId).ToListAsync(),
+                ProductFeatures = await _featureRepository.GetQuery().Where(d => d.ProductId == productId).ToListAsync(),
+            };
         }
         #endregion
 

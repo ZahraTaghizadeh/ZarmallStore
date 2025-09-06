@@ -15,7 +15,7 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         public string MainImageName { get; set; }
         public string Description { get; set; }
         public string ShortDescription { get; set; }
-        public ProductSelectedBrand ProductSelectedBrand { get; set; }
+        public ProductSelectedBrand? ProductSelectedBrand { get; set; }
 
         public List<ProductSelectedCategory> SelectedCategories { get; set; }
         public List<ProductComment> ProductComments { get; set; }

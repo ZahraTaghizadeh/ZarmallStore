@@ -10,7 +10,7 @@ namespace ZarmallStore.Data.Entities.ProductEntities
         public string MainImageName { get; set; }
         public string Description { get; set; }
         public string ShortDescription { get; set; }
-        public ProductSelectedBrand ProductSelectedBrand { get; set; }
+        public ProductSelectedBrand? ProductSelectedBrand { get; set; }
         #endregion
 
         #region Relations
