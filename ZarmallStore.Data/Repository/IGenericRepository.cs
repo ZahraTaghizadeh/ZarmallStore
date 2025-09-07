@@ -12,8 +12,9 @@ namespace ZarmallStore.Data.Repository
         Task AddRangeEntities(List<TEntity> entities);
         void EditEntity(TEntity entity);
         void DeleteEntity(TEntity entity);
-        void DeleteEntity(List<TEntity> entities);
+        void DeleteEntities(List<TEntity> entities);
         Task DeletePermanent(TEntity entity);
+        void DeletePermanentEntities(List<TEntity> entities);
         Task SaveAsync();
     }
 }
