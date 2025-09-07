@@ -9,10 +9,10 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         public IFormFile MainImage { get; set; }
         public string Description { get; set; }
         public string ShortDescription { get; set; }
-        public long BrandId { get; set; }
+        public long? BrandId { get; set; }
         public List<long> Categories { get; set; }
         public List<IFormFile> ProductGalleries { get; set; }
-        public List<ProductFeaturesDto> ProductFeatures { get; set; }
+        public List<ProductFeaturesDto>? ProductFeatures { get; set; }
     }
     public enum CreateProductResult
     {

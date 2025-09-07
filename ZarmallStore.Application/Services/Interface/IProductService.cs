@@ -10,7 +10,7 @@ namespace ZarmallStore.Application.Services.Interface
         Task<FilterProductDto> FilterProduct(FilterProductDto filter);
         Task<ProductDetailDto> ProductDetail(long productId);
         Task<CreateProductResult> CreateProduct(CreateProductDto dto);
-        Task<EditProductDto> GetProductDto(long productId);
+        Task<EditProductDto> GetEditProduct(long productId);
         Task<EditProductResult> EditProduct(EditProductDto dto);
         Task<bool> DeleteProduct(long productId);
         #endregion

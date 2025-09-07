@@ -23,7 +23,7 @@ namespace ZarmallStore.Application.Services.Implementarions
         private readonly IGenericRepository<ProductSelectedBrand> _selectedBrandRepository;
         private readonly IGenericRepository<ProductFeature> _featureRepository;
         private readonly IGenericRepository<ProductGallery> _galleryRepository;
-        public ProductService(IGenericRepository<Product> productRepository, IGenericRepository<ProductCategory> categoryRepository, IGenericRepository<ProductColor> colorRepository, 
+        public ProductService(IGenericRepository<Product> productRepository, IGenericRepository<ProductCategory> categoryRepository, IGenericRepository<ProductColor> colorRepository,
             IGenericRepository<ProductVariant> variantRepository, IGenericRepository<ProductComment> commentRepository, IGenericRepository<ProductSelectedCategory> selectedCategoryRepository,
             IGenericRepository<Brand> brandRepository, IGenericRepository<ProductSelectedBrand> selectedBrandRepository,
             IGenericRepository<ProductFeature> featureRepository, IGenericRepository<ProductGallery> galleryRepository)
@@ -78,7 +78,7 @@ namespace ZarmallStore.Application.Services.Implementarions
 
             #region Main Image
             var mainImageName = Guid.NewGuid().ToString("N") + Path.GetExtension(dto.MainImage.FileName);
-            var res = dto.MainImage.AddImageToServer(mainImageName, PathExtension.ProductImageServer,150 , 150 , PathExtension.ProductImageThumbServer);
+            var res = dto.MainImage.AddImageToServer(mainImageName, PathExtension.ProductImageServer, 150, 150, PathExtension.ProductImageThumbServer);
             if (res)
             {
                 product.MainImageName = mainImageName;
@@ -91,6 +91,89 @@ namespace ZarmallStore.Application.Services.Implementarions
 
             await _productRepository.AddEntity(product);
             await _productRepository.SaveAsync();
+
+            #region Categories
+            foreach (var category in dto.Categories)
+            {
+                var selectedCategory = await _categoryRepository.GetQuery().FirstOrDefaultAsync(d => d.Id == category);
+                if (selectedCategory == null) return CreateProductResult.CategoryNotFound;
+
+                var selected = new ProductSelectedCategory
+                {
+                    Product = product,
+                    Category = selectedCategory,
+                    ProductId = product.Id,
+                    CategoryId = category
+                };
+                await _selectedCategoryRepository.AddEntity(selected);
+            }
+            #endregion
+
+            #region  Brand
+            if (dto.BrandId != null)
+            {
+                var brand = await _brandRepository.GetQuery().FirstOrDefaultAsync(d => d.Id == dto.BrandId);
+                if (brand == null) return CreateProductResult.BrandNotFound;
+                var selectedBrand = new ProductSelectedBrand
+                {
+                    Product = product,
+                    Brand = brand,
+                    BrandId = brand.Id,
+                    ProductId = product.Id,
+
+                };
+                await _selectedBrandRepository.AddEntity(selectedBrand);
+                await _selectedBrandRepository.SaveAsync();
+            }
+            #endregion
+
+            #region Galleries
+            if (dto.ProductGalleries != null && dto.ProductGalleries.Any())
+            {
+                var galleryOrder = 2;
+                foreach (var item in dto.ProductGalleries)
+                {
+                    var galleryItem = new ProductGallery
+                    {
+                        ProductId = product.Id,
+                        Order = galleryOrder,
+                    };
+
+                    //Image
+
+                    var galleryImageName = Guid.NewGuid().ToString("N") + Path.GetExtension(dto.MainImage.FileName);
+                    dto.MainImage.AddImageToServer(mainImageName, PathExtension.ProductGalleryServer, 150, 150, PathExtension.ProductGalleryThumbServer);
+                    galleryItem.ImageName = galleryImageName;
+
+                    await _galleryRepository.AddEntity(galleryItem);
+
+                    galleryOrder++;
+                }
+
+            }
+            #endregion
+
+            #region Features
+            if(dto.ProductFeatures != null && dto.ProductFeatures.Any())
+            {
+                foreach (var item in dto.ProductFeatures)
+                {
+                    var featureOrder = 1;
+                    var feature = new ProductFeature
+                    {
+                        Product = product,
+                        ProductId = product.Id,
+                        Value = item.Value,
+                        Title = item.Title,
+                        Order = featureOrder,
+                    };
+                    await _featureRepository.AddEntity(feature);
+                    featureOrder ++;
+                };
+                await _featureRepository.SaveAsync();
+            }
+            #endregion
+
             return CreateProductResult.Success;
         }
 
@@ -111,9 +194,25 @@ namespace ZarmallStore.Application.Services.Implementarions
         {
             throw new NotImplementedException();
         }
-        public Task<EditProductDto> GetProductDto(long productId)
+        public async Task<EditProductDto> GetEditProduct(long productId)
         {
-            throw new NotImplementedException();
+            var brand = await _selectedBrandRepository.GetQuery().FirstOrDefaultAsync(d => d.ProductId == productId);
+            var data = await _productRepository.GetEntityById(productId);
+            var model = new EditProductDto
+            {
+                
+                Description = data.Description,
+                IsAvailable = data.IsAvailable,
+                Title = data.Title,
+                ShortDescription = data.ShortDescription,
+                ProductId = productId,
+                Categories = await _selectedCategoryRepository.GetQuery().Where(d=> d.ProductId == productId)
+                                .Select(d=>d.CategoryId).ToListAsync(),
+            };
+
+            if (brand != null)
+                model.BrandId = brand.Id;
+            return model;
         }
 
         public async Task<ProductDetailDto> ProductDetail(long productId)

@@ -7,6 +7,6 @@ namespace ZarmallStore.Data.Entities.ProductEntities
         public long ProductId { get; set; }
         public long CategoryId { get; set; }
         public Product Product { get; set; }
-        public ProductCategory ProductCategory { get; set; }
+        public ProductCategory Category { get; set; }
     }
 }
