@@ -182,13 +182,66 @@ namespace ZarmallStore.Application.Services.Implementarions
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteProduct(long productId)
+        public async Task<bool> DeleteProduct(long productId)
         {
-            throw new NotImplementedException();
+           var product = await _productRepository.GetEntityById(productId);
+            _productRepository.DeleteEntity(product);
+            await _productRepository.SaveAsync();
         }
-        public Task<EditProductResult> EditProduct(EditProductDto dto)
+        public async Task<EditProductResult> EditProduct(EditProductDto dto)
         {
-            throw new NotImplementedException();
+            var product = await _productRepository.GetQuery().FirstOrDefaultAsync(d=>d.Id == dto.ProductId);
+            if(product ==null) return EditProductResult.Error;
+            product.Title = dto.Title;
+            product.Description = dto.Description;
+            product.ShortDescription = dto.ShortDescription;
+            product.IsAvailable = dto.IsAvailable;
+            
+            #region Brand
+            if (dto.BrandId != null)
+            {
+                var brand = await _brandRepository.GetQuery().FirstOrDefaultAsync(d => d.Id == dto.BrandId);
+                if (brand == null) return EditProductResult.BrandNotFound;
+                var oldBrand = await _selectedBrandRepository.GetEntityById((long)dto.BrandId);
+                await _selectedBrandRepository.DeletePermanent(oldBrand);
+                var newBrand = new ProductSelectedBrand
+                {
+                    Product = product,
+                    Brand = brand,
+                    BrandId = brand.Id,
+                    ProductId = dto.ProductId,
+            };
+
+                await _selectedBrandRepository.AddEntity(newBrand);
+                await _selectedBrandRepository.SaveAsync();
+            }
+
+            #endregion
+
+            await RemoveProductSelectedCategories(dto.ProductId);
+            await AddProductSelectedCategories(dto.Categories, dto.ProductId);
+
+            #region Main Image
+            if (dto.MainImage != null)
+            {
+               
+                var mainImageName = Guid.NewGuid().ToString("N") + Path.GetExtension(dto.MainImage.FileName);
+                var res = dto.MainImage.AddImageToServer(mainImageName, PathExtension.ProductImageServer, 150, 150, PathExtension.ProductImageThumbServer,product.MainImageName);
+                if (res)
+                {
+                    product.MainImageName = mainImageName;
+                }
+                else
+                {
+                    return EditProductResult.ImageNotSave;
+                }
+
+            }
+            #endregion
+
+            _productRepository.EditEntity(product);
+            await _productRepository.SaveAsync();
+            return EditProductResult.Success;
         }
         public Task<FilterProductDto> FilterProduct(FilterProductDto filter)
         {

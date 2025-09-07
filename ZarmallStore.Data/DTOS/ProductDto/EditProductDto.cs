@@ -7,7 +7,7 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         public long ProductId { get; set; }
         public string Title { get; set; }
         public bool IsAvailable { get; set; }
-        public IFormFile? MainImageName { get; set; }
+        public IFormFile? MainImage { get; set; }
         public string Description { get; set; }
         public string ShortDescription { get; set; }
         public long? BrandId { get; set; }
@@ -18,8 +18,7 @@ namespace ZarmallStore.Data.DTOS.ProductDto
     {
         Success,
         Error,
-        FileNotImage,
+        ImageNotSave,
         BrandNotFound,
-        CategoryNotFound
     }
 }
