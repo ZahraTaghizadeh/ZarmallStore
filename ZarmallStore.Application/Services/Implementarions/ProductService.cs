@@ -60,9 +60,75 @@ namespace ZarmallStore.Application.Services.Implementarions
         #endregion
 
         #region Product
-        public Task<FilterProductDto> FilterProduct(FilterProductDto filter)
+        public async Task<FilterProductDto> FilterProduct(FilterProductDto filter)
         {
-            throw new NotImplementedException();
+            var query = _productRepository.GetQuery()
+                .Include(d => d.productVariants)
+                .Include(d => d.SelectedCategories)
+                .ThenInclude(d => d.Category).OrderByDescending(d => d.CreatDate).AsQueryable();
+            #region Switch
+            switch (filter.ProductOrder)
+            {
+                case FilterProductOrder.Newest:
+                    query = query.OrderByDescending(d => d.CreatDate);
+                    break;
+                case FilterProductOrder.Oldest:
+                    query = query.OrderBy(d => d.CreatDate);
+                    break;
+                case FilterProductOrder.MostExpensive:
+                    query = query.OrderByDescending(d => d.productVariants.OrderByDescending(v=>v.Price));
+                    break;
+                case FilterProductOrder.Cheapest:
+                    query = query.OrderBy(d => d.productVariants.OrderByDescending(v => v.Price));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            switch (filter.ProductStatus)
+            {
+                case FilterProductStatus.All:
+                    break;
+                case FilterProductStatus.Available:
+                    query = query.Where(d => d.IsAvailable);
+                    break;
+                case FilterProductStatus.NotAvailable:
+                    query = query.Where(d => !d.IsAvailable);
+                    break;
+                case FilterProductStatus.HasStockCount:
+                    query = query.Where(d => d.productVariants.Any(v => v.StockCount > 0));
+                    break;
+                case FilterProductStatus.HasZeroStockCount:
+                    query = query.Where(d => d.productVariants.Any(v => v.StockCount == 0));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            #endregion
+
+            #region Filter
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                query = query.Where(p => EF.Functions.Like(p.Title, $"{filter.Title}"));
+            }
+            if(filter.StartPrice != null)
+            {
+                query = query.Where(d => d.Price > filter.StartPrice);
+            }
+            if (filter.EndPrice != null)
+            {
+                query = query.Where(d => d.Price < filter.EndPrice);
+            }
+            if(filter is { StartPrice: not null, EndPrice: not null})
+            {
+                query = query.Where(d => d.Price < filter.EndPrice && d.Price > filter.StartPrice);
+            }
+            if (query.Any())
+            {
+                filter.MostPrice = query.OrderByDescending(d => d.Price).First().Price;
+                filter.LeastPrice = query.OrderBy(d => d.Price).First().Price;
+            }
+            #endregion
         }
         public async Task<ProductDetailDto> ProductDetail(long productId)
         {
@@ -484,10 +550,6 @@ namespace ZarmallStore.Application.Services.Implementarions
             throw new NotImplementedException();
         }
         #endregion
-
-        
-
-        
 
     }
 }
