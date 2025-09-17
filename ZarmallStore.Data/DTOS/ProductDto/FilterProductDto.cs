@@ -9,10 +9,12 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         public string Title { get; set; }
         public long? BrandId { get; set; }
         public long? CategoryId { get; set; }
+        public long? ColorId { get; set; }
         public int? MostPrice { get; set; }
         public int? LeastPrice { get; set; }
         public int? StartPrice { get; set; }
         public int? EndPrice { get; set; }
+        
         public FilterProductOrder ProductOrder  { get; set; }
         public FilterProductStatus ProductStatus { get; set; }
         public List<Product> Data { get; set; }

@@ -2,11 +2,13 @@
 using ZarmallStore.Application.Extention;
 using ZarmallStore.Application.Services.Interface;
 using ZarmallStore.Application.Utils;
+using ZarmallStore.Data.DTOS.Paging;
 using ZarmallStore.Data.DTOS.ProductCategoryDto;
 using ZarmallStore.Data.DTOS.ProductDto;
 using ZarmallStore.Data.Entities.OrderEntities;
 using ZarmallStore.Data.Entities.ProductEntities;
 using ZarmallStore.Data.Repository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ZarmallStore.Application.Services.Implementarions
@@ -55,17 +57,20 @@ namespace ZarmallStore.Application.Services.Implementarions
             await _galleryRepository.DisposeAsync();
             await _brandRepository.DisposeAsync();
             await _selectedBrandRepository.DisposeAsync();
-            await  _orderDetailRepository.DisposeAsync();
+            await _orderDetailRepository.DisposeAsync();
         }
         #endregion
 
         #region Product
         public async Task<FilterProductDto> FilterProduct(FilterProductDto filter)
         {
+            #region Query
             var query = _productRepository.GetQuery()
                 .Include(d => d.productVariants)
                 .Include(d => d.SelectedCategories)
                 .ThenInclude(d => d.Category).OrderByDescending(d => d.CreatDate).AsQueryable();
+            #endregion
+
             #region Switch
             switch (filter.ProductOrder)
             {
@@ -76,7 +81,7 @@ namespace ZarmallStore.Application.Services.Implementarions
                     query = query.OrderBy(d => d.CreatDate);
                     break;
                 case FilterProductOrder.MostExpensive:
-                    query = query.OrderByDescending(d => d.productVariants.OrderByDescending(v=>v.Price));
+                    query = query.OrderByDescending(d => d.productVariants.OrderByDescending(v => v.Price));
                     break;
                 case FilterProductOrder.Cheapest:
                     query = query.OrderBy(d => d.productVariants.OrderByDescending(v => v.Price));
@@ -99,7 +104,7 @@ namespace ZarmallStore.Application.Services.Implementarions
                     query = query.Where(d => d.productVariants.Any(v => v.StockCount > 0));
                     break;
                 case FilterProductStatus.HasZeroStockCount:
-                    query = query.Where(d => d.productVariants.Any(v => v.StockCount == 0));
+                    query = query.Where(d => !d.productVariants.Any(v => v.StockCount > 0));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -107,11 +112,16 @@ namespace ZarmallStore.Application.Services.Implementarions
             #endregion
 
             #region Filter
+
+            #region Title
             if (!string.IsNullOrEmpty(filter.Title))
             {
                 query = query.Where(p => EF.Functions.Like(p.Title, $"{filter.Title}"));
             }
-            if(filter.StartPrice != null)
+            #endregion
+
+            #region Price
+            if (filter.StartPrice != null)
             {
                 query = query.Where(d => d.Price > filter.StartPrice);
             }
@@ -119,7 +129,7 @@ namespace ZarmallStore.Application.Services.Implementarions
             {
                 query = query.Where(d => d.Price < filter.EndPrice);
             }
-            if(filter is { StartPrice: not null, EndPrice: not null})
+            if (filter is { StartPrice: not null, EndPrice: not null })
             {
                 query = query.Where(d => d.Price < filter.EndPrice && d.Price > filter.StartPrice);
             }
@@ -129,6 +139,32 @@ namespace ZarmallStore.Application.Services.Implementarions
                 filter.LeastPrice = query.OrderBy(d => d.Price).First().Price;
             }
             #endregion
+
+            #region Specification Ids
+            if (filter.CategoryId is > 0)
+            {
+                query = query.Where(d => d.SelectedCategories.Any(s => s.CategoryId == filter.CategoryId));
+            }
+
+            if (filter.ColorId is > 0)
+            {
+                query = query.Where(d => d.productVariants.Any(v => v.ColorId == filter.ColorId));
+            }
+
+            if (filter.BrandId is >0)
+            {
+                query = query.Where(d=> d.ProductSelectedBrand!=null && d.ProductSelectedBrand.BrandId == filter.BrandId);
+            }
+            #endregion
+
+            #endregion
+
+            #region Paging
+            var pager = Pager.Build(filter.PageId, await query.CountAsync(),filter.TakeEntity,filter.HowManyShowPageAfterAndBefore);
+            var allEntities = await query.Paging(pager).ToListAsync();
+            #endregion
+
+            return filter.SetData(allEntities).SetPaging(pager);
         }
         public async Task<ProductDetailDto> ProductDetail(long productId)
         {
@@ -230,7 +266,7 @@ namespace ZarmallStore.Application.Services.Implementarions
             #endregion
 
             #region Features
-            if(dto.ProductFeatures != null && dto.ProductFeatures.Any())
+            if (dto.ProductFeatures != null && dto.ProductFeatures.Any())
             {
                 foreach (var item in dto.ProductFeatures)
                 {
@@ -244,7 +280,7 @@ namespace ZarmallStore.Application.Services.Implementarions
                         Order = featureOrder,
                     };
                     await _featureRepository.AddEntity(feature);
-                    featureOrder ++;
+                    featureOrder++;
                 };
                 await _featureRepository.SaveAsync();
             }
@@ -307,7 +343,7 @@ namespace ZarmallStore.Application.Services.Implementarions
             #region Category
             await RemoveProductSelectedCategories(dto.ProductId);
             var addCategoryResult = await AddProductSelectedCategories(dto.Categories, dto.ProductId);
-            if(!addCategoryResult) return EditProductResult.CategoryNotFound;
+            if (!addCategoryResult) return EditProductResult.CategoryNotFound;
             #endregion
 
             #region Main Image
@@ -341,7 +377,7 @@ namespace ZarmallStore.Application.Services.Implementarions
             #endregion
 
             #region Features
-            var features = await _featureRepository.GetQuery().Where(d=>d.ProductId == productId).ToListAsync();
+            var features = await _featureRepository.GetQuery().Where(d => d.ProductId == productId).ToListAsync();
             _featureRepository.DeletePermanentEntities(features);
             await _featureRepository.SaveAsync();
             #endregion
@@ -354,11 +390,11 @@ namespace ZarmallStore.Application.Services.Implementarions
 
             #region Galleties
             var galleries = await _galleryRepository.GetQuery().Where(d => d.ProductId == productId).ToListAsync();
-            if(galleries.Any())
+            if (galleries.Any())
             {
                 foreach (var item in galleries)
                 {
-                    item.ImageName.DeleteImage(PathExtension.ProductGalleryImage,PathExtension.ProductGalleryThumb);
+                    item.ImageName.DeleteImage(PathExtension.ProductGalleryImage, PathExtension.ProductGalleryThumb);
                 }
                 _galleryRepository.DeletePermanentEntities(galleries);
                 await _galleryRepository.SaveAsync();
@@ -410,8 +446,8 @@ namespace ZarmallStore.Application.Services.Implementarions
         public async Task<bool> CreateCategory(CreateCategoryDto dto)
         {
             #region Check Url
-            var urlInUse = await _categoryRepository.GetQuery().AnyAsync(c=> c.Url == dto.Url);
-            if ( urlInUse)  return false;
+            var urlInUse = await _categoryRepository.GetQuery().AnyAsync(c => c.Url == dto.Url);
+            if (urlInUse) return false;
             #endregion
             var category = new ProductCategory
             {
@@ -443,9 +479,41 @@ namespace ZarmallStore.Application.Services.Implementarions
             await _categoryRepository.SaveAsync();
             return true;
         }
-        public Task<FilterCategoryDto> FilterCategory(FilterCategoryDto filter)
+        public async Task<FilterCategoryDto> FilterCategory(FilterCategoryDto filter)
         {
-            throw new NotImplementedException();
+            #region query
+            var query = _categoryRepository.GetQuery().OrderByDescending(d => d.CreatDate).AsQueryable();
+            #endregion
+
+            #region Switch
+            switch (filter.CategoryStatus)
+            {
+                case FilterCategoryStatus.All:
+                    break;
+                case FilterCategoryStatus.Active:
+                    query = query.Where(d => d.IsActive);
+                    break;
+                case FilterCategoryStatus.DeActive:
+                    query = query.Where(d => !d.IsActive);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            #endregion
+
+            #region Filter
+            if(string.IsNullOrEmpty(filter.Title))
+            {
+                query = query.Where(c => EF.Functions.Like(c.Title, $"{filter.Title}"));
+            }
+            #endregion
+
+            #region Paging
+            var pager = Pager.Build(filter.PageId, await query.CountAsync(), filter.TakeEntity, filter.HowManyShowPageAfterAndBefore);
+            var allEntities = await query.Paging(pager).ToListAsync();
+            #endregion
+
+            return filter.SetData(allEntities).SetPaging(pager);
         }
 
         public async Task<EditCategoryDto> GetEditCategory(long categoryId)

@@ -8,6 +8,7 @@ namespace ZarmallStore.Data.DTOS.ProductCategoryDto
         public long? CategoryId { get; set; }
         public string Title { get; set; }
         public string Url { get; set; }
+        public FilterCategoryStatus CategoryStatus { get; set; }
         public List<ProductCategory> Data { get; set; }
         #region Methods
         public FilterCategoryDto SetData(List<ProductCategory> data)
@@ -29,5 +30,12 @@ namespace ZarmallStore.Data.DTOS.ProductCategoryDto
             return this;
         }
         #endregion
+    }
+
+    public enum FilterCategoryStatus
+    {
+        All,
+        Active,
+        DeActive
     }
 }
