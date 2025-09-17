@@ -20,5 +20,6 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         Error,
         ImageNotSave,
         BrandNotFound,
+        CategoryNotFound
     }
 }

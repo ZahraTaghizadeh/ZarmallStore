@@ -10,6 +10,7 @@ namespace ZarmallStore.Data.Entities.ProductEntities
         public bool IsActive { get; set; }
         public int Order { get; set; }
         public ProductCategory Parent { get; set; }
+        public ICollection<ProductCategory> SubCategories { get; set; } = new List<ProductCategory>();
         public ICollection<ProductSelectedCategory> ProductSelectedCategories { get; set; }
     }
 }

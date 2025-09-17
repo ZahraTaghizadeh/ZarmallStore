@@ -17,11 +17,11 @@ namespace ZarmallStore.Application.Services.Interface
 
 
         #region Categories
-        Task AddProductSelectedCategories(List<long> selectedCategories, long productId);
+        Task<bool> AddProductSelectedCategories(List<long> selectedCategories, long productId);
         Task RemoveProductSelectedCategories(long productId);
         Task<FilterCategoryDto> FilterCategory(FilterCategoryDto filter);
-        Task CreateCategory(CreateCategoryDto dto);
-        Task EditCategory(EditCategoryDto dto);
+        Task<bool> CreateCategory(CreateCategoryDto dto);
+        Task<bool> EditCategory(EditCategoryDto dto);
         Task<EditCategoryDto> GetEditCategory(long categoryId);
         Task<bool> DeleteCategory(long categoryId);
         #endregion
