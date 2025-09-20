@@ -1,6 +1,7 @@
 ﻿
 using ZarmallStore.Data.DTOS.ProductCategoryDto;
 using ZarmallStore.Data.DTOS.ProductDto;
+using ZarmallStore.Data.Entities.ProductEntities;
 
 namespace ZarmallStore.Application.Services.Interface
 {
@@ -28,9 +29,10 @@ namespace ZarmallStore.Application.Services.Interface
 
         #region Color
         Task<FilterColorDto> FilterColor(FilterColorDto filter);
+        Task<List<ProductColor>> GetAllProductColors();
         Task CreateColor(CreateColorDto dto);
-        Task<EditeColorDto> GetEditeColor(long colorId);
-        Task EditeColor(EditeColorDto dto);
+        Task<EditColorDto> GetEditColor(long colorId);
+        Task EditColor(EditColorDto dto);
         Task<bool> DeleteColor(long colorId);
         #endregion
 

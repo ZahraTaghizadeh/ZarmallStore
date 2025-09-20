@@ -541,57 +541,124 @@ namespace ZarmallStore.Application.Services.Implementarions
         #endregion
 
         #region Color
-        public Task<FilterColorDto> FilterColor(FilterColorDto filter)
+        public async Task<FilterColorDto> FilterColor(FilterColorDto filter)
         {
-            throw new NotImplementedException();
+            var query = _colorRepository.GetQuery().OrderByDescending(d => d.CreatDate).AsQueryable();    
+            #region Filter
+            if (string.IsNullOrEmpty(filter.Title))
+            {
+                query = query.Where(c => EF.Functions.Like(c.Title, $"{filter.Title}"));
+            }
+            #endregion
+
+            #region Paging
+            var pager = Pager.Build(filter.PageId, await query.CountAsync(), filter.TakeEntity, filter.HowManyShowPageAfterAndBefore);
+            var allEntities = await query.Paging(pager).ToListAsync();
+            #endregion
+
+            return filter.SetData(allEntities).SetPaging(pager);
         }
-        public Task CreateColor(CreateColorDto dto)
+        public async Task<List<ProductColor>> GetAllProductColors()
         {
-            throw new NotImplementedException();
+           return await _colorRepository.GetQuery().ToListAsync();
+        }
+        public async Task CreateColor(CreateColorDto dto)
+        {
+            var color = new ProductColor
+            {
+                ColorCode = dto.ColorCode,
+                Title = dto.Title,
+            };
+            await _colorRepository.AddEntity(color);
+            await _colorRepository.SaveAsync();
+        }
+        public async Task<EditColorDto> GetEditColor(long colorId)
+        {
+            var data = await _colorRepository.GetEntityById(colorId);
+            return new EditColorDto
+            {
+                Title = data.Title,
+                ColorCode = data.ColorCode,
+                ColorId = data.Id
+            };
         }
 
-        public Task<EditeColorDto> GetEditeColor(long colorId)
+        public async Task EditColor(EditColorDto dto)
         {
-            throw new NotImplementedException();
+            var data = await _colorRepository.GetEntityById(dto.ColorId);
+            data.Title = dto.Title;
+            data.ColorCode = dto.ColorCode;
+            _colorRepository.EditEntity(data);
+            await _colorRepository.SaveAsync();
         }
 
-        public Task EditeColor(EditeColorDto dto)
+        public async Task<bool> DeleteColor(long colorId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteColor(long colorId)
-        {
-            throw new NotImplementedException();
+            var inUse = await _variantRepository.GetQuery().AnyAsync(c => c.ColorId == colorId);
+            if(inUse) return false;
+            var data = await _colorRepository.GetEntityById(colorId);
+            _colorRepository.DeleteEntity(data);
+            await _colorRepository.SaveAsync();
+            return true;
         }
         #endregion
 
         #region Gallery
-        public Task CreateGallery(CreateGalleryDto dto)
+        public async Task CreateGallery(CreateGalleryDto dto)
         {
-            throw new NotImplementedException();
+            var gallery = new ProductGallery
+            {
+                Order = dto.Order,
+                ProductId = dto.ProductId,
+            };
+
+            #region Main Image
+            var mainImageName = Guid.NewGuid().ToString("N") + Path.GetExtension(dto.ImageName.FileName);
+            dto.ImageName.AddImageToServer(mainImageName, PathExtension.ProductGalleryServer, 150, 150, PathExtension.ProductGalleryThumbServer);
+            gallery.ImageName = mainImageName;
+            #endregion
+
+            await _galleryRepository.AddEntity(gallery);
+            await _galleryRepository.SaveAsync();
         }
 
-        public Task<EditGalleryDto> GetEditGallery(long galleryId)
+        public async Task<EditGalleryDto> GetEditGallery(long galleryId)
         {
-            throw new NotImplementedException();
+            var data = await _galleryRepository.GetEntityById(galleryId);
+            return new EditGalleryDto
+            {
+                Order = data.Order,
+                GalleryId = data.Id
+            };
         }
 
-        public Task EditGallery(EditGalleryDto dto)
+        public async Task EditGallery(EditGalleryDto dto)
         {
-            throw new NotImplementedException();
+            var data = await _galleryRepository.GetEntityById(dto.GalleryId);
+            data.Order = dto.Order;
+            _galleryRepository.EditEntity(data);
+            await _galleryRepository.SaveAsync();
         }
 
-        public Task<bool> DeleteGallery(long galleryId)
+        public async Task<bool> DeleteGallery(long galleryId)
         {
-            throw new NotImplementedException();
+            var data = await _galleryRepository.GetQuery().FirstOrDefaultAsync(d => d.Id == galleryId);
+            if (data == null ) return false;
+            data.ImageName.DeleteImage(PathExtension.ProductGalleryImage, PathExtension.ProductGalleryThumb);
+            await _galleryRepository.DeletePermanent(data);
+            await _galleryRepository.SaveAsync();
+            return true;
         }
         #endregion
 
         #region Feature
-        public Task<bool> DeleteFeature(long featureId)
+        public async Task<bool> DeleteFeature(long featureId)
         {
-            throw new NotImplementedException();
+            var data = await _featureRepository.GetQuery().FirstOrDefaultAsync(d => d.Id == featureId);
+            if (data == null) return false;
+            await _featureRepository.DeletePermanent(data);
+            await _featureRepository.SaveAsync();
+            return true;
         }
         #endregion
 
@@ -617,6 +684,7 @@ namespace ZarmallStore.Application.Services.Implementarions
         {
             throw new NotImplementedException();
         }
+
         #endregion
 
     }
