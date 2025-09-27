@@ -1,0 +1,74 @@
+﻿@using ZarmallStore.Data.Entities.Account
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ZarmallStore.Data.DTOs.Account.CreateAdminDto
+@{
+    ViewData["Title"] = "ایجاد ادمین";
+    var roles = (List<Role>)ViewData["Roles"];
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="addproduct-accordion" class="custom-accordion">
+                <div class="card">
+                    <div class="p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar">
+                                    <div class="avatar-title font-size-16 rounded-circle bg-soft-primary text-primary">
+                                        01
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <h5 class="font-size-16 mb-1">@ViewData["Title"]</h5>
+                                <p class="text-muted text-truncate mb-0">لطفا فرم زیر را پر کنید</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="p-4 border-top">
+                            <form asp-area="Admin" asp-controller="Permission" asp-action="AddRoleToUser" method="post">
+                                <input asp-for="UserId" type="hidden"/>
+                                <div class="row">
+                                    <div class="col-lg-5">
+                                        <div class="mb-2">
+                                            <h5 class="text-primary">نقش ها :</h5>
+                                        </div>
+                                        <div class="mb-3 p-2">
+                                            @if (roles != null && roles.Any())
+                                            {
+                                                foreach (var item in roles)
+                                                {
+                                                    @if (Model.Roles.Any())
+                                                    {
+                                                        var selected = Model.Roles.Any(r => r == item.Id);
+                                                        <div class="form-check form-switch form-switch-md mb-3" dir="ltr">
+                                                            <input name="@nameof(Model.Roles)" value="@item.Id" @(selected ? "checked" : "") class="form-check-input" type="checkbox" id="@item.Id">
+                                                            <label class="form-check-label" for="@item.Id">@item.RoleTitle</label>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="form-check form-switch form-switch-md mb-3" dir="ltr">
+                                                            <input name="@nameof(Model.Roles)" value="@item.Id" class="form-check-input" type="checkbox" id="@item.Id">
+                                                            <label class="form-check-label" for="@item.Id">@item.RoleTitle</label>
+                                                        </div>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col text-right">
+                                        <button class="btn btn-success submit-btn"> <i class="mdi mdi-file-document-outline me-1"></i>ذخیره</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-﻿namespace ZarmallStore.Data.DTOS.Paging
+﻿namespace ZarmallStore.Data.DTOs.Paging
 {
     public class BasePaging
     {

@@ -1,0 +1,25 @@
+﻿@model ZarmallStore.Data.DTOs.Paging.BasePaging
+<div class="my-paginate my-4">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination flex-wrap justify-content-center">
+            @if (Model.StartPage < Model.PageId)
+            {
+                <li class="page-item">
+                    <a onclick="ChangePageId(@(Model.PageId - 1))" class="page-link pointer rounded-3">قبلی</a>
+                </li>
+            }
+            @for (var i = Model.StartPage; i <= Model.EndPage; i++)
+            {
+                <li class="page-item @(Model.PageId == i ? "active":"")">
+                    <a onclick="ChangePageId(@i)" class="page-link pointer rounded-3">@i</a>
+                </li>
+            }
+            @if (Model.EndPage > Model.PageId)
+            {
+                <li class="page-item">
+                    <a onclick="ChangePageId(@(Model.PageId + 1))" class="page-link pointer rounded-3">بعدی</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

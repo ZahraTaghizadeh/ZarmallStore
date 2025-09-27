@@ -1,23 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ZarmallStore.Data.DTOS.Paging;
+using ZarmallStore.Data.DTOs.Paging;
 using ZarmallStore.Data.Entities.ProductEntities;
 
-namespace ZarmallStore.Data.DTOS.ProductDto
+namespace ZarmallStore.Data.DTOs.ProductDto
 {
     public class FilterProductDto : BasePaging
     {
         public string Title { get; set; }
         public long? BrandId { get; set; }
         public long? CategoryId { get; set; }
+        public string? categoryUrl { get; set; }
         public long? ColorId { get; set; }
-        public int? MostPrice { get; set; }
-        public int? LeastPrice { get; set; }
+        public int MostPrice { get; set; }
+        public int LeastPrice { get; set; }
         public int? StartPrice { get; set; }
         public int? EndPrice { get; set; }
-        
-        public FilterProductOrder ProductOrder  { get; set; }
+        public FilterProductOrder ProductOrder { get; set; } = FilterProductOrder.Newest;
         public FilterProductStatus ProductStatus { get; set; }
         public List<Product> Data { get; set; }
+
         #region Methods
         public FilterProductDto SetData(List<Product> data)
         {
@@ -39,7 +40,6 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         }
         #endregion
     }
-
     public enum FilterProductStatus
     {
         [Display(Name = "همه")]
@@ -50,7 +50,7 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         NotAvailable,
         [Display(Name = "موجود در انبار")]
         HasStockCount,
-        [Display(Name = "ناموجود")]
+        [Display(Name = "نا موجود")]
         HasZeroStockCount
     }
 
@@ -62,7 +62,7 @@ namespace ZarmallStore.Data.DTOS.ProductDto
         Oldest,
         [Display(Name = "گرانترین")]
         MostExpensive,
-        [Display(Name = "ارازن ترین")]
-        Cheapest
+        [Display(Name = "ارزان ترین")]
+        Cheapest,
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace ZarmallStore.Data.DTOS.ProductDto
+﻿namespace ZarmallStore.Data.DTOs.ProductDto
 {
-    public class CreateColorDto
+    public class CreateColorDTo
     {
         public string Title { get; set; }
         public string ColorCode { get; set; }

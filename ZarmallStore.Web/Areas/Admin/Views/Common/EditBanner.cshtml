@@ -1,0 +1,108 @@
+﻿@using ZarmallStore.Data.Entities.Common
+@model ZarmallStore.Data.DTOs.CommonDto.EditBannerDto
+@{
+    ViewData["Title"] = "ویرایش بنر";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div id="addproduct-accordion" class="custom-accordion">
+            <div class="card">
+                <div class="p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar">
+                                <div class="avatar-title font-size-16 rounded-circle bg-soft-primary text-primary">
+                                    01
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <h5 class="font-size-16 mb-1">@ViewData["Title"]</h5>
+                            <p class="text-muted text-truncate mb-0">لطفا فرم زیر را پر کنید</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="p-4 border-top">
+                        <form asp-area="Admin" asp-controller="Common" asp-action="EditBanner" enctype="multipart/form-data" method="post">
+                            <input asp-for="BannerId" type="hidden" />
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">عنوان</label>
+                                        <input asp-for="Title" class="form-control">
+                                        <span asp-validation-for="Title" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">URL</label>
+                                        <input asp-for="Url" class="form-control">
+                                        <span asp-validation-for="Url" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <div class="mb-3">
+                                        <label class="form-label">ترتیب نمایش</label>
+                                        <input asp-for="Order" class="form-control">
+                                        <span asp-validation-for="Order" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <div class="mb-3">
+                                        <label class="form-label">موقعیت نمایش</label>
+                                        <select asp-for="BannerLocation" asp-items="@Html.GetEnumSelectList<BannerLocation>()" class="form-select"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <div class="mb-3">
+                                        <div class="file-upload">
+                                            <label for="MainImage" class="file-label">تصویر بنر  (اختیاری)</label>
+                                            <input type="file" asp-for="ImageFile" id="MainImage" accept="image/*">
+                                            <div id="fileList1" class="file-list"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col text-right">
+                                    <button class="btn btn-success submit-btn"> <i class="mdi mdi-file-document-outline me-1"></i>ذخیره</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section AdminFooterSection
+{
+    <script src="/Admin/js/productactions.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("fileInput").addEventListener("change", function() {
+                const file = this.files[0];
+                const errorMessage = document.getElementById("error-message");
+
+                if (file) {
+                    console.log("Selected file type:", file.type);
+
+                    if (!file.type.startsWith("image/")) {
+                        errorMessage.textContent = "فقط فایل‌های تصویری مجاز هستند.";
+                        this.value = "";
+                    } else {
+                        errorMessage.textContent = "";
+                    }
+                }
+            });
+        });
+
+    </script>
+}

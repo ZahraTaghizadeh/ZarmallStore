@@ -14,6 +14,7 @@
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8" />
+	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,18 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Site\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Admin\Views\Shared\_AdminFooterRef.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_AdminHeaderRef.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_AdminMessages.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_AdminMetaTags.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_AdminMobileMenu.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_ViewImports.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_ViewStart.cshtml" />
   </ItemGroup>
 
 </Project>

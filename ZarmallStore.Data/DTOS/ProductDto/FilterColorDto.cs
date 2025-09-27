@@ -1,13 +1,13 @@
-﻿using ZarmallStore.Data.DTOS.Paging;
-using ZarmallStore.Data.DTOS.ProductCategoryDto;
+﻿using ZarmallStore.Data.DTOs.Paging;
 using ZarmallStore.Data.Entities.ProductEntities;
 
-namespace ZarmallStore.Data.DTOS.ProductDto
+namespace ZarmallStore.Data.DTOs.ProductDto
 {
-    public class FilterColorDto: BasePaging
+    public class FilterColorDto : BasePaging
     {
         public string Title { get; set; }
         public List<ProductColor> Data { get; set; }
+
         #region Methods
         public FilterColorDto SetData(List<ProductColor> data)
         {

@@ -1,0 +1,171 @@
+﻿@model ZarmallStore.Data.DTOs.ProductDto.FilterColorDto
+@{
+    ViewData["Title"] = "مدیریت رنگ ها";
+}
+<form asp-area="Admin" asp-controller="Product" asp-action="FilterColors" method="get" id="filter-form">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">لیست رنگ ها</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4 justify-content-start">
+                        <div class="">
+                            <button data-bs-toggle="modal" data-bs-target="#filterModal" type="button"
+                                    class="btn btn-primary waves-effect waves-light">
+                                <i class="bx bx-filter font-size-16 align-middle me-2"></i>فیلتر اطلاعات
+                            </button>
+
+                            <a asp-area="Admin" asp-controller="Product" asp-action="CreateColor" class="btn btn-success">
+                                <i class="bx bx-plus font-size-16 align-middle me-2"></i>افزودن آیتم
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="product-list" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row align-items-center">
+                                                        @if (Model.Data.Any())
+                                                        {
+                                                            var index = 1;
+                                                            <div class="table-responsive px-3">
+                                                                <table class="table align-middle table-nowrap">
+                                                                    <tbody>
+                                                                        <tr class="table-header-row">
+                                                                            <th style="border-radius: 0 10px 10px 0">#</th>
+                                                                            <th>عنوان</th>
+                                                                            <th>رنگ</th>
+                                                                            <th>کد رنگ</th>
+                                                                            <th>ID</th>
+                                                                            <th style="border-radius: 10px 0 0 10px">عملیات</th>
+                                                                        </tr>
+                                                                        @foreach (var color in Model.Data)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    @index)
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div class="avatar-lg me-4">
+                                                                                        <p>@color.Title</p>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <div>
+                                                                                        <div class="filter-color-dot" style="background-color: @color.ColorCode">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                
+                                                                                <td>
+                                                                                    <div>
+                                                                                        <p>@color.ColorCode</p>
+                                                                                    </div>
+                                                                                </td>
+                                                                                
+                                                                                <td>
+                                                                                    <div>
+                                                                                        <p>@color.Id</p>
+                                                                                    </div>
+                                                                                </td>
+
+
+                                                                                <td>
+                                                                                    <div class="action-links">
+                                                                                        <a class="btn btn-warning btn-sm" asp-area="Admin" asp-controller="Product"
+                                                                                           asp-action="EditColor" asp-route-colorId="@color.Id">ویرایش </a>
+                                                                                        <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal-@color.Id">حذف</a>
+
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            index++;
+                                                                        }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="alert alert-primary" role="alert">
+                                                                <p class="mb-0">دیتایی یافت نشد.</p>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <partial name="_AdminPaging" model="@Model.GetCurrentPaging()" />
+
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+    </div>
+    <!-- end row -->
+    <!-- Scrollable modal -->
+    <div class="modal fade filter-modal" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">فیلتر رنگ ها</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="text-primay" for="title">عنوان</label>
+                        <input asp-for="Title" class="form-control" type="text" id="title">
+                    </div>
+                    <div class="mb-2">
+                        <label class="text-primay" for="url">کد رنگ</label>
+                        <input class="form-control" type="" id="url">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">بستن</button>
+                    <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (Model.Data.Any())
+{
+    @foreach (var item in Model.Data)
+    {
+        <!-- Static Backdrop Modal -->
+        <div class="modal fade" id="deleteModal-@item.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">تایید حذف</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>آیا از حذف @item.Title مطمئن هستید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">خیر</button>
+                        <a asp-area="Admin" asp-controller="Product" asp-action="DeleteColor"
+                           asp-route-colorId="@item.Id" class="btn btn-primary">بله</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,27 @@
+﻿@model ZarmallStore.Data.DTOs.Paging.BasePaging
+<div class="row">
+    <div class="col-12">
+        <ul class="pagination pagination-rounded mb-2  justify-content-center">
+            @if (Model.StartPage < Model.PageId)
+            {
+                <li class="page-item disabled">
+                    <a onclick="FillPageId(@(Model.PageId - 1))" class="page-link pointer"><i class="mdi mdi-chevron-left"></i></a>
+                </li>
+            }
+
+            @for (var i = Model.StartPage; i <= Model.EndPage; i++)
+            {
+                <li class="page-item @(Model.PageId == i ? "active" : "")">
+                    <a onclick="FillPageId(@i)" class="page-link pointer">@i</a>
+                </li>
+            }
+
+            @if (Model.EndPage > Model.PageId)
+            {
+                <li class="page-item">
+                    <a onclick="FillPageId(@(Model.PageId + 1))" class="page-link pointer"><i class="mdi mdi-chevron-right"></i></a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

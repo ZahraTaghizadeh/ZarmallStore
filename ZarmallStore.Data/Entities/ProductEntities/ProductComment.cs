@@ -8,13 +8,15 @@ namespace ZarmallStore.Data.Entities.ProductEntities
     {
         public long ProductId { get; set; }
         public long UserId { get; set; }
-        [Range(1, 5)]
+
+        [Range(1,5)]
         public int Rate { get; set; }
         public CommentState CommentState { get; set; }
         public string Description { get; set; }
         public Product Product { get; set; }
-        public User USer { get; set; }
+        public User User { get; set; }
     }
+
     public enum CommentState
     {
         Submitted,

@@ -2,7 +2,7 @@
 
 namespace ZarmallStore.Data.Entities.ProductEntities
 {
-    public class ProductFeature: BaseEntity
+    public class ProductFeature : BaseEntity
     {
         public long ProductId { get; set; }
         public string Title { get; set; }

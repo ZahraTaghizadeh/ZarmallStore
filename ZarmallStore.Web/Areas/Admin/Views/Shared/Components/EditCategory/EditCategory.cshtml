@@ -1,0 +1,19 @@
+﻿@model ZarmallStore.Data.DTOs.ProductCategoryDto.TreeViewCategoriesDto
+@if (Model.productCategories.Any())
+{
+    <ul class="category-ul">
+        @foreach (var item in Model.productCategories)
+        {
+            <li>
+                <div class="form-check">
+                    <input value="@item.Id" class="form-check-input" type="radio" name="ParentId" id="@item.Id">
+                    <label class="form-check-label" for="@item.Id">
+                        @item.Title
+                    </label>
+                </div>
+
+                @await Component.InvokeAsync("EditCategory", new { parentId = item.Id, level = Model.Level + 1 , Model.ThisCategoryId })
+            </li>
+        }
+    </ul>
+}

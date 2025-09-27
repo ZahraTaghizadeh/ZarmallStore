@@ -1,0 +1,161 @@
+﻿@using ZarmallStore.Application.Extensions
+@using ZarmallStore.Application.Utils
+@using ZarmallStore.Data.DTOs.OrderDto
+@model ZarmallStore.Data.DTOs.Account.UserDashboardDetailDto
+@{
+    ViewData["Title"] = "کاربر";
+}
+<section class="content">
+    <div class="container-fluid">
+        <div class="content">
+            <div class="row">
+                @await Component.InvokeAsync("UserMenu")
+                <div class="col-xl-9">
+                    @if (Model.User.FullName == null || Model.User.UserCity == null || Model.User.Address == null || Model.User.PostCode == null)
+                    {
+                        <div class="alert alert-warning shadow-box" role="alert">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                <div class="right text-right d-flex align-items-center">
+                                    <i class="bi bi-exclamation-triangle-fill font-20"></i>
+                                    <div class="d-grid gap-2 ms-3">
+                                        <h4 class="font-16">تکمیل حساب کاربری</h4>
+                                        <h4 class="font-14 text-muted fw-normal">
+                                            برای ثبت اولین سفارش نیاز به تکمیل اطلاعات حساب کاربری دارید.
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="left text-left mt-sm-0 mt-3">
+                                    <a asp-area="User" asp-controller="Account" asp-action="EditUserDetail" class="btn border-0 main-color-one-bg font-14 waves-effect waves-light">
+                                        تکمیل اطلاعات
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="content-box px-2 slider-parent">
+                        <div class="container-fluid">
+                            <div class="panel-mini-card">
+                                <div class="row gy-4">
+                                    <div class="col-xl-3 col-md-6 col-6">
+                                        <a asp-area="User" asp-controller="Order" asp-action="FilterOrders" asp-route-state="@FilterOrderState.Pending">
+                                            <div class="panel-two-full-info-item w-100">
+                                                <div class="content d-flex align-items-center flex-column flex-md-row">
+                                                    <div class="icon-card me-3">
+                                                        <i class="bi bi-credit-card"></i>
+                                                    </div>
+                                                    <div class="detail text-center text-md-start">
+                                                        <div class="title mb-2 text-muted"> در حال انجام</div>
+                                                        <div class="value fw-bold h5"> @Model.PendingOrderCount سفارش</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-xl-3 col-md-6 col-6">
+                                        <a asp-area="User" asp-controller="Order" asp-action="FilterOrders" asp-route-state="@FilterOrderState.Sent">
+                                            <div class="panel-two-full-info-item w-100">
+                                                <div class="content d-flex align-items-center flex-column flex-md-row">
+                                                    <div class="icon-card me-3">
+                                                        <i class="bi bi-truck"></i>
+                                                    </div>
+                                                    <div class="detail text-center text-md-start">
+                                                        <div class="title mb-2 text-muted"> تکمیل شده</div>
+                                                        <div class="value fw-bold h5"> @Model.SentOrderCount سفارش</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-xl-3 col-md-6 col-6">
+                                        <a asp-area="User" asp-controller="Order" asp-action="FilterOrders" asp-route-state="@FilterOrderState.Returned">
+                                            <div class="panel-two-full-info-item w-100">
+                                                <div class="content d-flex align-items-center flex-column flex-md-row">
+                                                    <div class="icon-card me-3">
+                                                        <i class="bi bi-box-seam"></i>
+                                                    </div>
+                                                    <div class="detail text-center text-md-start">
+                                                        <div class="title mb-2 text-muted"> مرجوع شده</div>
+                                                        <div class="value fw-bold h5"> @Model.ReturnedOrderCount سفارش</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-xl-3 col-md-6 col-6">
+                                        <a asp-area="User" asp-controller="Order" asp-action="FilterOrders" asp-route-state="@FilterOrderState.Canceled">
+                                            <div class="panel-two-full-info-item w-100">
+                                                <div class="content d-flex align-items-center flex-column flex-md-row">
+                                                    <div class="icon-card me-3">
+                                                        <i class="bi bi-cart-x"></i>
+                                                    </div>
+                                                    <div class="detail text-center text-md-start">
+                                                        <div class="title mb-2 text-muted"> لغو شده</div>
+                                                        <div class="value fw-bold h5"> @Model.CanceledOrderCount سفارش</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert slider-parent bg-white mt-5 shadow-box rounded-4">
+                        <div>
+                            @if (Model.PendingOrders.Any())
+                            {
+                                <div class="panel-latest-order">
+                                    <div class="table-responsive roundedTable p-0">
+                                        <table class="table table-bordered main-table rounded-0">
+                                            <tbody>
+                                                @foreach (var order in Model.PendingOrders.OrderByDescending(o => o.CreateDate))
+                                                {
+                                                    <tr>
+                                                        <td colspan="4" class="align-middle">
+                                                            <div class="d-flex align-items-center">
+                                                                <p class="mb-0 text-muted font-15">کد سفارش</p>
+                                                                <p class="mb-0 ms-2 font-12 fw-bold">@order.Id</p>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="mb-0 text-muted mt-2 font-14">@order.PaymentDate.ToShamsi()</p>
+                                                        </td>
+                                                        <td colspan="4" class="align-middle">
+                                                            <div class="d-flex align-items-center">
+                                                                <p class="mb-0 text-muted font-15">مبلغ</p>
+                                                                <p class="mb-0 ms-2 fw-bold font-14">@order.TotalPrice.ToRial()</p>
+                                                            </div>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <p class="mb-0 fw-bold mt-2 font-14">
+                                                                <i class="bi bi-check-circle-fill me-1 main-color-three-color"></i>
+                                                                @order.OrderState.GetEnumName()
+                                                            </p>
+                                                        </td >
+                                                        <td colspan="2" class="align-middle">
+                                                            <div class="text-center">
+                                                                <a asp-area="User" asp-controller="Order" asp-action="OrderDetail" asp-route-orderId="@order.Id"
+                                                                   class="btn main-color-one-bg">مشاهده</a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info">
+                                    <p class="mb-0">سفارش در حال انجامی موجود نیست</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

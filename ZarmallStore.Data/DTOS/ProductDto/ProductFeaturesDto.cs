@@ -1,4 +1,4 @@
-﻿namespace ZarmallStore.Data.DTOS.ProductDto
+﻿namespace ZarmallStore.Data.DTOs.ProductDto
 {
     public class ProductFeaturesDto
     {

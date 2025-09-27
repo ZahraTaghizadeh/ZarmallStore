@@ -1,0 +1,75 @@
+﻿@using ZarmallStore.Data.Entities.Account
+@{
+    var user = (User) ViewData["User"];
+}
+<div class="col-xl-3">
+    <partial name="_DashboardMenu" model="user" />
+    <!--   end dashboard menu mobile   -->
+    <div class="panel-side d-xl-block d-none position-sticky top-0">
+        <div class="content-box bg-white pb-0">
+            <div class="container-fluid">
+                <div class="panel-box bs-bg-gray-300 border-ui p-3 rounded-4 shadow-md ">
+                    <div class="d-flex align-items-center">
+                        <div class="d-grid gap-2">
+                            <h6 class="h6 main-color-one-color">
+                                @if (user.FullName != null)
+                                {
+                                    @user.FullName
+                                }
+                                else
+                                {
+                                    <span>کاربر فروشگاه</span>
+                                }
+                            </h6>
+                            <h6 class="font-14 text-muted">
+                                @user.MobileNumber
+                                <a asp-area="User" asp-controller="Account" asp-action="EditUserDetail" class="ms-2 text-muted"><i class="bi bi-pencil-square"></i> </a>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-box">
+                    <nav class="navbar profile-box-nav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-item active">
+                                <a asp-area="User" asp-controller="Home" asp-action="Dashboard" class="nav-link">
+                                    <i class="bi bi-house-door me-3"></i>داشبورد
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-area="User" asp-controller="Order" asp-action="FilterOrders" class="nav-link">
+                                    <i class="bi bi-cart-check me-3"></i>سفارش های من
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="bi bi-bell me-3"></i>پیام ها و اطلاعیه ها
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="bi bi-chat-dots me-3"></i>نظرات من
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="bi bi-question-circle me-3"></i>درخواست پشتیبانی
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-area="User" asp-controller="Account" asp-action="FavoriteProducts" class="nav-link">
+                                    <i class="bi bi-heart me-3"></i>محصولات مورد علاقه
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-area="" asp-controller="Account" asp-action="LogOut" class="nav-link text-danger">
+                                    <i class="bi bi-arrow-right-square me-3"></i>خروج از حساب کاربری
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

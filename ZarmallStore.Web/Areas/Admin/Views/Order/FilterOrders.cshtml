@@ -1,0 +1,249 @@
+﻿@model ZarmallStore.Data.DTOs.OrderDto.FilterOrderDto
+@using ZarmallStore.Application.Extensions
+@using ZarmallStore.Application.Utils
+@using ZarmallStore.Data.DTOs.OrderDto
+@using ZarmallStore.Data.Entities.OrderEntities
+@using ZarmallStore.Web.Extensions
+@{
+    ViewData["Title"] = "مدیریت سفارشات";
+}
+<form asp-area="Admin" asp-controller="Order" asp-action="FilterOrders" method="get" id="filter-form">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">لیست محصولات</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4 justify-content-start">
+                        <div class="">
+                            <button data-bs-toggle="modal" data-bs-target="#filterModal" type="button"
+                                    class="btn btn-primary waves-effect waves-light">
+                                <i class="bx bx-filter font-size-16 align-middle me-2"></i>فیلتر اطلاعات
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="product-list" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row align-items-center">
+                                                        @if (Model.Data.Any())
+                                                        {
+                                                            var index = 1;
+                                                            <div class="table-responsive px-3">
+                                                                <table class="table align-middle table-nowrap">
+                                                                    <tbody>
+                                                                        <tr class="table-header-row">
+                                                                            <th style="border-radius: 0 10px 10px 0">شناسه سفارش</th>
+                                                                            <th>نام کاربر</th>
+                                                                            <th>شهر مقصد</th>
+                                                                            <th>مبلغ</th>
+                                                                            <th>وضعیت</th>
+                                                                            <th>تاریخ ثبت</th>
+                                                                            <th style="border-radius: 10px 0 0 10px">عملیات</th>
+                                                                        </tr>
+                                                                        @foreach (var order in Model.Data)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <p>@order.Id</p>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <p class="mb-0">
+                                                                                        @order.UserName.LongString30()
+                                                                                    </p>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <p class="mb-0">
+                                                                                        @ProvinceFinder.GetProvince(order.DestinationCity) / @order.DestinationCity
+                                                                                    </p>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <p class="mb-0">@order.TotalPrice.ToRial()</p>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <p class="mb-0">@order.OrderState.GetEnumName()</p>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <p class="mb-0">@order.PaymentDate.ToShamsi()</p>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <div class="action-links">
+                                                                                        <a class="btn btn-primary btn-sm" asp-area="Admin" asp-controller="Order" asp-action="OrderDetail" 
+                                                                                           asp-route-orderId="@order.Id">مشاهده</a>
+
+                                                                                        <a class="btn btn-warning btn-sm" asp-area="Admin" asp-controller="Order"
+                                                                                           asp-action="ProcessOrder" asp-route-orderId="@order.Id">پردازش</a>
+
+                                                                                        @if (order.OrderState == OrderState.Canceled)
+                                                                                        {
+                                                                                            <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal-@order.Id">حذف</a>
+                                                                                        }
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            index++;
+                                                                        }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="alert alert-primary" role="alert">
+                                                                <p class="mb-0">سفارشی یافت نشد.</p>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <partial name="_AdminPaging" model="@Model.GetCurrentPaging()" />
+
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+    </div>
+    <!-- end row -->
+    <!-- Scrollable modal -->
+    <div class="modal fade filter-modal" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">فیلتر محصولات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-2">
+                                <label>نام کاربر</label>
+                                <input asp-for="UserName" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-2">
+                                <label>وضعیت سفارش</label>
+                                <select asp-items="@Html.GetEnumSelectList<FilterOrderState>()" asp-for="FilterOrderState" class="form-select"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-4">
+                                <label>استان مقصد</label>
+                                <select class="form-select" id="province-select">
+                                    <option value="">انتخاب کنید</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-4">
+                                <label>شهر مقصد</label>
+                                <select asp-for="DestinationCity" class="form-select" id="city-select">
+                                    <option value="">انتخاب کنید</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        سایر گزینه های فیلتر سفارش
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="col-6">
+                                            <div class="mb-2">
+                                                <label>توضیحات</label>
+                                                <input asp-for="Description" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="mb-2">
+                                                <label>حداقل قیمت</label>
+                                                <input asp-for="MinimumPrice" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="mb-2">
+                                                <label>کد پیگیری</label>
+                                                <input asp-for="TraceCode" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">بستن</button>
+                    <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (Model.Data.Any())
+{
+    @foreach (var item in Model.Data)
+    {
+        <!-- Static Backdrop Modal -->
+        <div class="modal fade" id="deleteModal-@item.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">تایید حذف</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>آیا از حذف @item.Id مطمئن هستید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">خیر</button>
+                        <a asp-area="Admin" asp-controller="Order" asp-action="DeleteOrder"
+                           asp-route-orderId="@item.Id" class="btn btn-primary">بله</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section AdminFooterSection
+{
+    <script src="/Admin/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="/Admin/js/pages/form-advanced.init.js"></script>
+    <script src="/Admin/js/Cities.js"></script>
+}
+
+@section AdminHeaderSection
+{
+    <link href="/Admin/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" type="text/css" />
+}

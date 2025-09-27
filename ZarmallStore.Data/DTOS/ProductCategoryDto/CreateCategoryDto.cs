@@ -1,6 +1,6 @@
-﻿using ZarmallStore.Data.Entities.ProductEntities;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace ZarmallStore.Data.DTOS.ProductCategoryDto
+namespace ZarmallStore.Data.DTOs.ProductCategoryDto
 {
     public class CreateCategoryDto
     {
@@ -8,5 +8,7 @@ namespace ZarmallStore.Data.DTOS.ProductCategoryDto
         public string Title { get; set; }
         public string Url { get; set; }
         public int Order { get; set; }
+        public bool ShowInHome { get; set; }
+        public IFormFile MainImage { get; set; }
     }
 }

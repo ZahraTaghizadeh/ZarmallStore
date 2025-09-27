@@ -1,0 +1,301 @@
+﻿@{
+    ViewData["Title"] = "داشبورد ادمین";
+}
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="row">
+            <div class="col-xl-4 col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar">
+                                    <div class="avatar-title rounded bg-primary bg-gradient">
+                                        <i data-eva="pie-chart-2" class="fill-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="text-muted mb-1">درآمد</p>
+                                <h4 class="mb-0">21456 تومان</h4>
+                            </div>
+
+                            <div class="flex-shrink-0 align-self-end ms-2">
+                                <div class="badge rounded-pill font-size-13 badge-soft-success">
+                                    + 2.65٪
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+            <div class="col-xl-4 col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar">
+                                    <div class="avatar-title rounded bg-primary bg-gradient">
+                                        <i data-eva="shopping-bag" class="fill-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="text-muted mb-1">سفارشات</p>
+                                <h4 class="mb-0">5,643</h4>
+                            </div>
+                            <div class="flex-shrink-0 align-self-end ms-2">
+                                <div class="badge rounded-pill font-size-13 badge-soft-danger">
+                                    - 0.82٪
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar">
+                                    <div class="avatar-title rounded bg-primary bg-gradient">
+                                        <i data-eva="people" class="fill-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="text-muted mb-1">مشتریان</p>
+                                <h4 class="mb-0">45,254</h4>
+                            </div>
+                            <div class="flex-shrink-0 align-self-end ms-2">
+                                <div class="badge rounded-pill font-size-13 badge-soft-danger">
+                                    - 1.04٪
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-3">فعالیت کاربر</h5>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <div class="dropdown">
+                                    <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        هفتگی<i class="mdi mdi-chevron-down ms-1"></i>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item" href="#"></a>
+                                        <a class="dropdown-item" href="#">ماهانه </a>
+                                        <a class="dropdown-item" href="#">سالانه </a><a class="dropdown-item" href="#">هفتگی </a>
+                                        <a class="dropdown-item" href="#">امروز</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-muted mb-1">این ماه</p>
+                            <h4>16543</h4>
+                        </div>
+
+                        <div class="m-n3">
+                            <div id="chart-area" data-colors="[&quot;#3b76e1&quot;, &quot;#f56e6e&quot;]" class="apex-charts"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-3">آمار سفارش</h5>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <div class="dropdown">
+                                    <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i data-eva="more-horizontal-outline" class="fill-muted" data-eva-height="18" data-eva-width="18"></i>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item" href="#"></a>
+                                        <a class="dropdown-item" href="#">ماهانه </a>
+                                        <a class="dropdown-item" href="#">سالانه </a><a class="dropdown-item" href="#">هفتگی </a>
+                                        <a class="dropdown-item" href="#">امروز</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="chart-donut" data-colors="[&quot;#3b76e1&quot;, &quot;#f1f3f7&quot;, &quot;#f56e6e&quot;]" class="mt-2"></div>
+
+                        <div class="text-center mt-4 border-top">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="pt-3">
+                                        <p class="text-muted text-truncate mb-2">تکمیل شد</p>
+                                        <h5 class="font-size-16 mb-0">70</h5>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="pt-3">
+                                        <p class="text-muted text-truncate mb-2">در انتظار</p>
+                                        <h5 class="font-size-16 mb-0">25</h5>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="pt-3">
+                                        <p class="text-muted text-truncate mb-2">لغو</p>
+                                        <h5 class="font-size-16 mb-0">19</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-3">محصول برتر</h5>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <div class="dropdown">
+                                    <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ماهانه<i class="mdi mdi-chevron-down ms-1"></i>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item" href="#"></a>
+                                        <a class="dropdown-item" href="#">ماهانه </a>
+                                        <a class="dropdown-item" href="#">سالانه </a><a class="dropdown-item" href="#">هفتگی </a>
+                                        <a class="dropdown-item" href="#">امروز</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mx-n4" data-simplebar="" style="max-height: 296px;">
+                            <ul class="list-unstyled mb-0">
+                                <li class="px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar-sm">
+                                                <div class="avatar-title bg-primary bg-gradient rounded">
+                                                    #1
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <p class="text-muted mb-1 text-truncate">
+                                                تیشرت آبی پولو
+                                            </p>
+                                            <div class="fw-semibold font-size-15">25.4 تومان</div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                3.82 هزار
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar-sm">
+                                                <div class="avatar-title bg-primary bg-gradient rounded">
+                                                    #2
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <p class="text-muted mb-1 text-truncate">هودی مردانه</p>
+                                            <div class="fw-semibold font-size-15">24.5 تومان</div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                3.14 هزار
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar-sm">
+                                                <div class="avatar-title bg-primary bg-gradient rounded">
+                                                    #3
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <p class="text-muted mb-1 text-truncate">کلاه قرمز رنگ</p>
+                                            <div class="fw-semibold font-size-15">22.5 تومان</div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                2.84 هزار
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar-sm">
+                                                <div class="avatar-title bg-primary bg-gradient rounded">
+                                                    #4
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <p class="text-muted mb-1 text-truncate">تی شرت جیبی</p>
+                                            <div class="fw-semibold font-size-15">21.5 تومان</div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                2.06 هزار
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+</div>

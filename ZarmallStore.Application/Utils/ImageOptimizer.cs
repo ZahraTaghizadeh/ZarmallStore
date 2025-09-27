@@ -1,6 +1,6 @@
-﻿using SixLabors.ImageSharp.Formats.Jpeg;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp;
 
 namespace ZarmallStore.Application.Utils
 {

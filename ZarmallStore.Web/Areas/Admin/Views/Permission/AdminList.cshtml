@@ -1,0 +1,94 @@
+﻿@using ZarmallStore.Application.Utils
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<ZarmallStore.Data.Entities.Account.UserRole>
+@{
+    ViewData["Title"] = "ادمین ها";
+    var index = 1;
+}
+<div class="container-fluid">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <h5 class="card-title">@ViewData["Title"]</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table project-list-table table-nowrap align-middle table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">نام ادمین</th>
+                            <th scope="col">شماره موبایل</th>
+                            <th scope="col">نقش</th>
+                            <th scope="col">تاریخ ایجاد</th>
+                            <th scope="col">عملیات</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model.OrderByDescending(c => c.CreateDate))
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>
+                                        <p class="mb-0">@item.User.FullName</p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0">@item.User.MobileNumber</p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0">@item.Role.RoleTitle</p>
+                                    </td>
+                                    <td>@item.LastUpdateDate.ToStringShamsiDate()</td>
+                                    <td>
+                                        <ul class="list-inline mb-0">
+                                            <li class="list-inline-item">
+                                                <a data-bs-toggle="modal" data-bs-target=".role-permissions-@item.Id" class="px-2 btn btn-sm btn-primary">نقش ها</a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a asp-area="Admin" asp-controller="Permission" asp-action="AddRoleToUser" asp-route-userId="@item.UserId" class="px-2 btn btn-sm btn-warning">ویرایش</a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="modal fade role-permissions-@item.Id" tabindex="-1" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">نقش ها</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>@item.User.FullName</h5>
+                        <div>
+                            @foreach (var permission in item.Role.RolePermissions)
+                            {
+                                <span class="permi-style">@permission.Permission.Title</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

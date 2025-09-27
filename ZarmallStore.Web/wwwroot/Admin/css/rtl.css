@@ -1,0 +1,379 @@
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/iransans-farsi-numbers/eot/IRANSansWeb(FaNum)_Bold.eot');
+    src: url('fonts/iransans-farsi-numbers/eot/IRANSansWeb(FaNum)_Bold.eot?#iefix') format('embedded-opentype'),
+        /* IE6-8 */
+        url('fonts/iransans-farsi-numbers/woff2/IRANSansWeb(FaNum)_Bold.woff2') format('woff2'),
+        /* FF39+,Chrome36+, Opera24+*/
+        url('fonts/iransans-farsi-numbers/woff/IRANSansWeb(FaNum)_Bold.woff') format('woff'),
+        /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+        url('fonts/iransans-farsi-numbers/ttf/IRANSansWeb(FaNum)_Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'IRANYekan';
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/IRANYekan/eot/iranyekanwebboldfanum.eot');
+    src: url('fonts/IRANYekan/woff/iranyekanwebboldfanum.woff') format('woff'),
+        /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+        url('fonts/IRANYekan/ttf/iranyekanwebboldfanum.ttf') format('truetype');
+}
+
+
+@font-face {
+    font-family: 'Peyda';
+    src: url('fonts/peyda/PeydaWeb-Bold.eot');
+    src: url('fonts/peyda/PeydaWeb-Bold.eot?#iefix') format('embedded-opentype'),
+        url('fonts/peyda/PeydaWeb-Bold.woff2') format('woff2'),
+        url('fonts/peyda/PeydaWeb-Bold.woff') format('woff'),
+        url('fonts/peyda/PeydaWeb-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Tanha';
+    src: url('fonts/tanha/Tanha.eot');
+    src: url('fonts/tanha/Tanha.woff2') format('woff2'),
+        url('fonts/tanha/Tanha.woff') format('woff'),
+        url('fonts/tanha/Tanha.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Vazir';
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/vazir-font-v29.0.1/eot/Vazir-Bold.eot');
+    src: url('fonts/vazir-font-v29.0.1/woff2/Vazir-Bold.woff2') format('woff2'),
+        /* FF39+,Chrome36+, Opera24+*/
+        url('fonts/vazir-font-v29.0.1/woff/Vazir-Bold.woff') format('woff'),
+        /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+        url('fonts/vazir-font-v29.0.1/ttf/Vazir-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Parastoo';
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/Parastoo/eot/Parastoo-Bold.eot');
+    src: url('fonts/Parastoo/woff2/Parastoo-Bold.woff2') format('woff2'),
+        /* FF39+,Chrome36+, Opera24+*/
+        url('fonts/Parastoo/woff/Parastoo-Bold.woff') format('woff'),
+        /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+        url('fonts/Parastoo/ttf/Parastoo-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'sahel';
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/sahel/eot/Sahel-Bold.eot');
+    src: url('fonts/sahel/woff2/Sahel-Bold.woff2') format('woff2'),
+        /* FF39+,Chrome36+, Opera24+*/
+        url('fonts/sahel/woff/Sahel-Bold.woff') format('woff'),
+        /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+        url('fonts/sahel/ttf/Sahel-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'samim';
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/samim-font-v2.0.1/eot/Samim-Bold.eot');
+    src: url('fonts/samim-font-v2.0.1/woff2/Samim-Bold.woff2') format('woff2'),
+        /* FF39+,Chrome36+, Opera24+*/
+        url('fonts/samim-font-v2.0.1/woff/Samim-Bold.woff') format('woff'),
+        /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+        url('fonts/samim-font-v2.0.1/ttf/Samim-Bold.ttf') format('truetype');
+}
+
+
+@font-face {
+    font-family: 'Dana';
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/Dana/eot/dana-fanum-bold.eot');
+    src: url('fonts/Dana/woff2/dana-fanum-bold.woff2') format('woff2'),
+        /* FF39+,Chrome36+, Opera24+*/
+        url('fonts/Dana/woff/dana-fanum-bold.woff') format('woff'),
+        /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+        url('fonts/Dana/ttf/dana-fanum-bold.ttf') format('truetype');
+}
+
+
+html, p, body, h1, h2, h3, h4, h5, h6, a, span, td, ul, text, .apex-charts text, .apexcharts-legend-text, .apexcharts-tooltip-title, .apexcharts-tooltip * {
+    font-family: 'iransans' !important;
+}
+
+.far {
+    font-family: "Font Awesome 5 Free" !important;
+}
+
+html[dir="rtl"] body {
+    /* direction: rtl; */
+    text-align: right;
+}
+
+/******style calendar******/
+
+.fc-direction-ltr {
+    direction: rtl;
+    text-align: right;
+}
+
+.fc-toolbar-chunk .fc-prev-button {
+    order: 2;
+    border-radius: 0.75rem 0 0 0.75rem !important;
+}
+
+.fc-toolbar-chunk .fc-next-button {
+    order: 1;
+    border-radius: 0 0.75rem 0.75rem 0 !important;
+}
+
+.fc-direction-ltr .fc-toolbar>*>:not(:first-child) {
+    margin-right: 0.75em;
+    margin-left: 0;
+}
+
+#btn-new-event i {
+    margin-left: 0.5rem;
+}
+
+/******style apps-chat******/
+
+.dropdown.align-self-start .dropdown-menu {
+    right: 0 !important;
+}
+
+html[dir="rtl"] .mdi-send::before, html[dir="rtl"] .bx-send {
+    transform: rotate(180deg);
+}
+
+.dropdown .dropdown-menu.dropdown-menu-end {
+    left: 0 !important;
+}
+
+/******style apps-file-manager******/
+.mdi-arrow-right::before {
+    content: "\F004D";
+    margin-right: 0.3rem;
+}
+
+span.text-muted {
+    display: inline-block;
+}
+
+html[dir="rtl"] i.mdi-circle-medium {
+    float: right;
+    margin-left: 0.25rem !important;
+    margin-right: 0 !important;
+}
+
+.checkout-order-summary table td p:nth-child(2) {
+    display: table-row;
+}
+
+.gridjs-search {
+    float: right;
+}
+
+table.gridjs-table {
+    text-align: right;
+}
+
+html[dir="rtl"] .swiper-button-next:after, .swiper-container-rtl .swiper-button-prev:after {
+    content: 'prev';
+
+}
+
+html[dir="rtl"] .swiper-button-prev:after, .swiper-container-rtl .swiper-button-next:after {
+
+    content: 'next';
+}
+
+.product-view-nav.nav-pills .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-rounded {
+    float: right !important;
+}
+
+.pagination-rounded .page-item:first-child {
+    order: 2;
+}
+
+.pagination-rounded .page-item:last-child {
+    order: -1;
+}
+
+html[dir="rtl"] body .pagination-rounded .page-item:first-child {
+    order: -1;
+}
+
+html[dir="rtl"] body .pagination-rounded .page-item:last-child {
+    order: 2;
+}
+
+.btn-group .btn-success.waves-effect:first-child {
+
+    order: 2;
+}
+
+.btn-group .btn-success.waves-effect:first-child {
+    border-radius: 0.75rem 0 0 0.75rem;
+}
+
+.btn-group .btn-success.waves-effect:last-child {
+    border-radius: 0 0.75rem 0.75rem 0;
+}
+
+table.invoice {
+    text-align: right !important;
+}
+
+.invoice-items td.alignright {
+    white-space: nowrap;
+}
+
+code {
+    direction: ltr;
+    display: inline-block;
+}
+
+.mdi-chevron-right::before {
+    content: "\F0141";
+}
+
+.mdi-chevron-left::before {
+    content: "\F0142";
+}
+
+.font-size-15 {
+    direction: rtl;
+}
+
+.countdown-endtxt {
+    width: 100%;
+}
+
+.blockquote-reverse {
+    text-align: right;
+}
+
+.glightbox-clean .gslide-desc {
+    font-family: 'IRANSans';
+}
+
+#apexchartsbarYear .apexcharts-subtitle-text, #apexchartsbarYear .apexcharts-title-text {
+    transform: translateX(190px);
+}
+
+@media screen and (max-width:435px) {
+    .fc-header-toolbar {
+        display: block !important;
+    }
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:hover {
+    background-color: #2753a5;
+    border-color: #244b91;
+}
+
+.fc .fc-button-primary {
+    background-color: #3264bf;
+    border-color: #2f5eb4;
+}
+
+.fc .fc-button-primary:disabled {
+    background-color: #3b76e1;
+    border-color: #3b76e1;
+}
+
+.fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
+    -webkit-box-shadow: 0 0 0 0.15rem rgb(88 139 230 / 50%);
+    box-shadow: 0 0 0 0.15rem rgb(88 139 230 / 50%);
+}
+
+#column_chart_datalabel .apexcharts-xaxis {
+    opacity: 0;
+}
+
+html[dir="rtl"] .slider.rounded {
+    direction: ltr;
+}
+
+.modal-button {
+    left: 0;
+    right: auto;
+}
+
+html[dir="rtl"] body .text-muted .mdi-arrow-left {
+    float: left !important;
+    margin-right: 0.25rem !important;
+    transform: rotatex(180deg);
+}
+
+.text-muted .mdi-arrow-left {
+    float: right !important;
+    transform: rotatey(180deg);
+    margin-left: 0.25rem !important;
+
+}
+
+input.form-control {
+    text-align: right;
+}
+
+.form-switch {
+    padding-right: 0;
+}
+
+.swiper-button-next:after, .swiper-button-prev:after {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.form-check-right .form-check-input {
+    float: right;
+    margin-right: -1.5em;
+}
+
+.form-check-right {
+    margin-right: 1.5em;
+}
+
+.form-switch .form-check-input {
+    float: right;
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+[dir="rtl"] .fc-header-toolbar {
+    text-align: center;
+}
+
+@media screen and (max-width:576.98px) {
+    #chart-column .apexcharts-xaxis .apexcharts-xaxis-texts-g {
+        transform: translateY(20px);
+    }
+}
+
+.apexcharts-svg .apexcharts-yaxis {
+    transform: translatex(0);
+}
+
+.e-charts div {
+    width: auto !important;
+}

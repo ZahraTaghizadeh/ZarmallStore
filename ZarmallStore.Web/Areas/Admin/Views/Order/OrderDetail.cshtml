@@ -1,0 +1,206 @@
+﻿@using ZarmallStore.Application.Extensions
+@using ZarmallStore.Application.Utils
+@using ZarmallStore.Web.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ZarmallStore.Data.DTOs.OrderDto.OrderDetailDto
+@{
+    ViewData["Title"] = "جزئیات سفارش";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row justify-content-center order-detail-tables">
+                        <div class="col-12 col-md-6">
+                            <h4 class="order-title">اطلاعات سفارش</h4>
+                            <table class="table table-striped table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>پردازش سفارش</td>
+                                        <td>
+                                            <a asp-area="Admin" asp-controller="Order" asp-action="ProcessOrder"
+                                               asp-route-orderId="@Model.Id" class="btn btn-primary">پردازش</a>
+                                            
+                                            <a asp-area="Admin" asp-controller="Order" asp-action="PrintOrder"
+                                               asp-route-orderId="@Model.Id" class="btn btn-info">چاپ فاکتور</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>شماره سفارش</td>
+                                        <td>@Model.Id</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>وضعیت سفارش</td>
+                                        <td>
+                                            @Model.OrderState.GetEnumName()
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>کد پیگیری بانکی</td>
+                                        <td>@Model.PaymentRecord.RefId</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>کد رهگیری پستی</td>
+                                        @if (Model.PostTraceCode != null)
+                                        {
+                                            <td>@Model.PostTraceCode</td>
+                                        }
+                                        else
+                                        {
+                                            <td>تعیین نشده</td>
+                                        }
+                                    </tr>
+
+                                    <tr>
+                                        <td>تاریخ پرداخت</td>
+                                        <td>@Model.PaymentRecord.CreateDate.ToString("HH:mm") - @Model.PaymentRecord.CreateDate.ToShamsiDate()</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>مبلغ پرداختی</td>
+                                        <td>@Model.TotalPrice.ToRial()</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>پذیرنده</td>
+                                        <td>@Model.UserName</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>تماس</td>
+                                        <td>@Model.User.MobileNumber</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>مقصد</td>
+                                        <td>@ProvinceFinder.GetProvince(Model.DestinationCity) / @Model.DestinationCity</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>آدرس</td>
+                                        <td>@Model.Address</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>کد پستی</td>
+                                        <td>@Model.PostCode</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <h4 class="order-title">اطلاعات تراکنش</h4>
+                            <table class="table table-striped table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>شماره تراکنش در دیتابیس</td>
+                                        <td>@Model.PaymentRecord.Id</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>تاریخ پرداخت</td>
+                                        <td>@Model.PaymentRecord.CreateDate.ToString("HH:mm") @Model.PaymentRecord.CreateDate.ToShamsiDate()</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>شناسه تراکنش درگاه پرداخت</td>
+                                        <td>@Model.PaymentRecord.TransactionId</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>شماره پیگیری بانک</td>
+                                        <td>@Model.PaymentRecord.RefId</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>شناسه دیجیتال تراکنش</td>
+                                        <td>@Model.PaymentRecord.Authority</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>شماره كارت پرداخت كننده</td>
+                                        <td>@Model.PaymentRecord.CardPan</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>مبلغ</td>
+                                        @{ var price = Model.PaymentRecord.Amount / 10;}
+                                        <td>@price.ToRial()</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>ای پی پرداخت کننده</td>
+                                        <td>@Model.PaymentRecord.BuyerId</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>تاریخ پرداخت تراکنش</td>
+                                        <td>@Model.PaymentRecord.PaymentTime.ToString("HH:mm") - @Model.PaymentRecord.PaymentTime.ToShamsiDate()</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="font-size-16 mb-1">محصولات</h3>
+                            <div class="table-responsive">
+                                <table class="table table-nowrap table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">عنوان</th>
+                                            <th scope="col">رنگ</th>
+                                            <th scope="col">تعداد</th>
+                                            <th scope="col">شناسه محصول</th>
+                                            <th scope="col">قیمت واحد</th>
+                                            <th scope="col">قیمت مازاد</th>
+                                            <th scope="col">قیمت کل</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.OrderDetails.Any())
+                                        {
+                                            var index = 1;
+                                            foreach (var item in Model.OrderDetails.OrderByDescending(c => c.CreateDate))
+                                            {
+                                                <tr>
+                                                    <th scope="row">@index</th>
+                                                    <td>
+                                                        <a asp-area="Admin" asp-controller="Product" asp-action="ProductDetail"
+                                                           asp-route-productId="@item.ProductVariant.ProductId" class="text-primary">@item.ProductVariant.Product.Title</a>
+                                                    </td>
+                                                    <td>@item.ProductVariant.ColorTitle</td>
+                                                    <td>@item.Count</td>
+                                                    <td>@item.ProductVariant.ProductId</td>
+                                                    <td>@item.ProductPrice.ToRial()</td>
+                                                    <td>@item.VariantPrice.ToRial()</td>
+                                                    <td>@item.TotalPrice.ToRial()</td>
+                                                </tr>
+                                                index++;
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="row">
+                        <div class="col-12 blog-text">
+                            <p>@Model.Description</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

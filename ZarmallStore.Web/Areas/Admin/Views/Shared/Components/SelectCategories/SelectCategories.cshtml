@@ -1,0 +1,39 @@
+﻿@model ZarmallStore.Data.DTOs.ProductCategoryDto.TreeViewCategoriesDto
+@if (Model.productCategories.Any())
+{
+    <ul class="category-ul">
+        @foreach (var item in Model.productCategories)
+        {
+            if (Model.SelectedCategoriesIds != null)
+            {
+                <!-- Used for Edit Product -->
+                var selectedCategory = Model.SelectedCategoriesIds.Any(c => c == item.Id);
+                <li>
+                    <div class="form-check">
+                        <input value="@item.Id" class="form-check-input" type="checkbox" name="Categories" id="@item.Id" @(selectedCategory ? "checked" : "")>
+                        <label class="form-check-label" for="@item.Id">
+                            @item.Title
+                        </label>
+                    </div>
+
+                    @await Component.InvokeAsync("SelectCategories", new { parentId = item.Id, level = Model.Level + 1, selectedCategoriesIds = Model.SelectedCategoriesIds })
+                </li>
+            }
+            else
+            {
+                <!-- Used for Create Product -->
+                <li>
+                    <div class="form-check">
+                        <input value="@item.Id" class="form-check-input" type="checkbox" name="Categories" id="@item.Id">
+                        <label class="form-check-label" for="@item.Id">
+                            @item.Title
+                        </label>
+                    </div>
+
+                    @await Component.InvokeAsync("SelectCategories", new { parentId = item.Id, level = Model.Level + 1})
+                </li>
+            }
+        }
+    </ul>
+}
+

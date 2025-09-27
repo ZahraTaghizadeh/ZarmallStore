@@ -1,0 +1,207 @@
+﻿@using ZarmallStore.Data.Entities.ProductEntities
+@{
+    ViewData["Title"] = "ایجاد موجودی محصول";
+    var productId = (long)ViewData["ProductId"];
+    var colors = (List<ProductColor>)ViewData["Colors"]!;
+    var colorIndex = 1;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div id="addproduct-accordion" class="custom-accordion">
+            <div class="card">
+                <div class="p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar">
+                                <div class="avatar-title font-size-16 rounded-circle bg-soft-primary text-primary">
+                                    01
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <h5 class="font-size-16 mb-1">@ViewData["Title"]</h5>
+                            <p class="text-muted text-truncate mb-0">لطفا فرم زیر را پر کنید</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="p-4 border-top">
+                        <form asp-area="Admin" asp-controller="Product" asp-action="CreateVariant" method="post" id="variantsForm">
+                            <input name="productId" type="hidden" value="@productId" />
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table class="table" id="variantsTable" style="min-width: 800px">
+                                            <thead>
+                                                <tr class="table-header-row">
+                                                    <th class="radius-td-right">رنگ</th>
+                                                    <th>تعداد</th>
+                                                    <th>قیمت (اختیاری)</th>
+                                                    <th class="radius-td-left">حذف</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="variantsBody">
+                                                <tr>
+                                                    <td>
+                                                        <select name="variants[0].ColorId" class="form-select">
+                                                            <option value="">-- انتخاب رنگ --</option>
+                                                            @foreach (var color in colors)
+                                                            {
+                                                                <option value="@color.Id">@color.Title</option>
+                                                            }
+                                                        </select>
+                                                    </td>
+
+                                                    <td><input type="number" name="variants[0].StockCount" class="form-control" /></td>
+                                                    <td><input type="text" name="variants[0].Price" class="form-control price-input" /></td>
+                                                    <td><button type="button" class="btn btn-danger btn-sm text-light" disabled="disabled"><i class="fa fa-trash"></i></button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p id="formMessage" class="text-danger my-3" style="display: none"></p>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <button type="button" id="addVariant" class="btn btn-primary"> + افزودن ویژگی</button>
+                                    <a data-bs-toggle="modal" data-bs-target="#colorsModal" class="btn btn-info" href="#">رنگ ها</a>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col">
+                                    <button class="btn btn-success"> <i class="mdi mdi-file-document-outline me-1"></i>ذخیره</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Colors Modal-->
+<div class="modal fade" id="colorsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">رنگ ها</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body">
+                @foreach (var color in colors)
+                {
+                    <div class="mb-2">
+                        <div class="items-around">
+                            <div>@colorIndex) @color.Title</div>
+                            <div>
+                                <div class="create-variant-color-list" style="background: @color.ColorCode"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    colorIndex++;
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section AdminFooterSection
+{
+    <script>
+        //<option value='1'>قرمز</option><option value='2'>سبز</option><option value='3'>آبی</option>
+        // Add Variant input row 
+        let variantIndex = 1;
+        const colorOptionsHtml = `@Html.Raw(string.Join("", colors.Select(c => $"<option value='{c.Id}'>{c.Title}</option>")))`;
+
+        document.getElementById("addVariant").addEventListener("click", function () {
+            const tbody = document.getElementById("variantsBody");
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+               <td>
+                   <select name="variants[${variantIndex}].ColorId" class="form-select">
+                        <option value="">-- انتخاب رنگ --</option>
+                        ${colorOptionsHtml}
+                   </select>
+                </td>
+                <td><input type="number" name="variants[${variantIndex}].StockCount" class="form-control" /></td>
+                <td><input type="text" name="variants[${variantIndex}].Price" class="form-control price-input" /></td>
+                <td><button type="button" class="btn btn-sm btn-danger removeRow"><i class="fa fa-trash"></i></button></td>
+            `;
+            tbody.appendChild(row);
+            variantIndex++;
+            formatPriceInputs();
+        });
+
+        // remove Variant input row
+        document.getElementById("variantsTable").addEventListener("click", function (e) {
+            if (e.target.classList.contains("removeRow")) {
+                e.target.closest("tr").remove();
+            }
+        });
+
+        // Check Form Null Inputs
+        document.getElementById("variantsForm").addEventListener("submit", function (e) {
+            const inputs = this.querySelectorAll("input");
+            const selects = this.querySelectorAll("select");
+            const messageElement = document.getElementById("formMessage");
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.border = "2px solid red";
+                } else {
+                    input.style.border = "";
+                }
+            });
+
+            selects.forEach(select => {
+                if (!select.value.trim()) {
+                    isValid = false;
+                    select.style.border = "2px solid red";
+                } else {
+                    select.style.border = "";
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
+                messageElement.textContent = "فرم شامل ورودی ای بدون مقدار می باشد.لطفا فرم را به طور کامل پر کنید";
+                messageElement.style.display = "block";
+            } else {
+                messageElement.style.display = "none";
+            }
+        });
+
+        function formatNumber(value) {
+            if (!value) return '';
+            return Number(value).toLocaleString('en-US');
+        }
+
+        function formatPriceInputs() {
+            const inputs = document.querySelectorAll(".price-input");
+
+            inputs.forEach(function (input) {
+                input.addEventListener("input", function () {
+                    const cursorPosition = this.selectionStart;
+                    const rawValue = this.value.replace(/\D/g, '');
+                    const formattedValue = formatNumber(rawValue);
+
+                    this.value = formattedValue;
+
+                    const diff = formattedValue.length - rawValue.length;
+                    this.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+                });
+            });
+        }
+
+        formatPriceInputs();
+    </script>
+}

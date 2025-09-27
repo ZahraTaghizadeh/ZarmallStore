@@ -1,6 +1,6 @@
-﻿namespace ZarmallStore.Data.DTOS.Account
+﻿namespace ZarmallStore.Data.DTOs.Account
 {
-    public class CaptchaDTO
+    public class CaptchaDto
     {
         public string Token { get; set; }
     }

@@ -62,5 +62,18 @@
         public static string BrandThumbServer =
             Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/content/images/Brand/thumb/");
         #endregion
+
+        #region Test
+        public static string TestImage = "/content/images/Test/origin/";
+
+        public static string TestServer =
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/content/images/Test/origin/");
+
+        public static string TestThumb = "/content/images/Test/thumb/";
+
+        public static string TestThumbServer =
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/content/images/Test/thumb/");
+        #endregion
+
     }
 }

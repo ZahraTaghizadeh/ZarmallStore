@@ -1,0 +1,46 @@
+﻿<section class="float-btn fw-light fw-bolder py-0">
+    <div class="container-fluid">
+        <div class="progress-wrap d-lg-block d-none">
+            <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+            </svg>
+        </div>
+        <div id="btncollapzion" class="btn_collapzion"></div>
+        <div class="" id="contactOverlay"></div>
+    </div>
+</section>
+
+<div class="mobile-footer d-lg-none d-table justify-content-center shadow-box bg-white position-fixed bottom-0 p-2 w-100"
+     style="z-index: 100;table-layout: fixed;">
+    <ul class="d-table-row">
+        <li class="d-table-cell pointer" onclick="topFunction()">
+            <div class="mf-link nav-link text-center">
+                <span class="d-block mf-link-icon"><i class="bi bi-chevron-up font-20"></i></span>
+                <span class="mt-1 font-12 fw-bold mf-link-title">بالا</span>
+            </div>
+        </li>
+        <li class="d-table-cell">
+            <a href="/" class="mf-link nav-link text-center">
+                <span class="d-block mf-link-icon"><i class="bi bi-house font-20"></i></span>
+                <span class="mt-1 font-12 fw-bold mf-link-title">صفحه اصلی</span>
+            </a>
+        </li>
+        <li class="d-table-cell">
+            <a asp-area="User" asp-controller="Order" asp-action="Cart" class="mf-link nav-link text-center">
+                <div class="position-relative mf-link-icon d-table mx-auto">
+                    <span class="d-block mf-link-icon"><i class="bi bi-bag font-20"></i></span>
+                </div>
+                <span class="mt-1 font-12 fw-bold mf-link-title">سبد خرید</span>
+            </a>
+        </li>
+
+        <li class="d-table-cell">
+            <a asp-area="User" asp-controller="Home" asp-action="Dashboard" class="mf-link nav-link text-center">
+                <div class="position-relative mf-link-icon d-table mx-auto">
+                    <span class="d-block mf-link-icon"><i class="bi bi-person font-20"></i></span>
+                </div>
+                <span class="mt-1 font-12 fw-bold mf-link-title">حساب کاربری</span>
+            </a>
+        </li>
+    </ul>
+</div>

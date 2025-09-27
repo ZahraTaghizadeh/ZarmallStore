@@ -1,0 +1,15 @@
+﻿@model ZarmallStore.Data.DTOs.ProductDto.CreateGalleryDto
+<div>
+    <input asp-for="ProductId" type="hidden"/>
+    <div class="mb-3">
+        <div class="file-upload">
+            <label for="GalleryImage" class="file-label">تصویر گالری</label>
+            <input type="file" asp-for="ImageName" id="GalleryImage" accept="image/*">
+            <div id="fileList1" class="file-list"></div>
+        </div>
+    </div>
+    <div class="mb-2">
+        <label class="text-primary">ترتیب نمایش</label>
+        <input class="form-control" asp-for="Order">
+    </div>
+</div>

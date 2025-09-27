@@ -1,0 +1,165 @@
+﻿@using ZarmallStore.Data.Entities.Account
+@using ZarmallStore.Web.Extensions
+@using ZarmallStore.Web.UserExtensions
+@model ZarmallStore.Data.DTOs.Account.EditUserInfoDTO
+@{
+    ViewData["Title"] = "ویرایش پروفایل";
+    var user = (User) ViewData["User"];
+}
+<section class="content">
+    <div class="container-fluid">
+        <div class="content">
+            <div class="row">
+                @await Component.InvokeAsync("UserMenu")
+                <div class="col-xl-9">
+                    <div class="row gy-4 align-items-center">
+                        <div class="col-6">
+                            <div class="section-title-title">
+                                <h2 class="fw-900 h4">
+                                    پروفایل<span class="with-highlight ms-1">شما</span>
+                                </h2>
+                                <div class="Dottedsquare"></div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-end">
+                                <a data-bs-toggle="modal" data-bs-target="#editModal" href=""
+                                   class="btn main-color-one-bg rounded-3 btn-action-panel">
+                                    <i class="bi bi-pencil-square me-2"></i>ویرایش
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content mt-4">
+                        <div class="row mt-5 slider-parent p-3">
+                            <div class="col-12 col-md-6">
+                                <h6 class="fw-bold font-15 text-primary">نام و نام خانوادگی:</h6>
+                                <p class=" mt-2 font-14">@user.FullName</p>
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <h6 class="text-primary fw-bold font-15 ">کد پستی:</h6>
+                                <p class=" mt-2 font-14">@user.PostCode</p>
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <h6 class="fw-bold font-15 text-primary">استان / شهر :</h6>
+                                @if (user.UserCity != null)
+                                {
+                                    <p class=" mt-2 font-14">@ProvinceFinder.GetProvince(user.UserCity) / @user.UserCity</p>
+                                }
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <h6 class="fw-bold font-15 text-primary">آدرس :</h6>
+                                <p class=" mt-2 font-14">@user.Address</p>
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <h6 class="fw-bold font-15 text-primary">آدرس ایمیل :</h6>
+                                <p class=" mt-2 font-14">@user.Email</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Modal-->
+                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">ویرایش پروفایل</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-area="User" asp-controller="Account" asp-action="EditUserDetail" autocomplete="off" method="post">
+                                    <input type="hidden" asp-for="UserId" value="@User.GetUserId()"/>
+                                    <input type="hidden" asp-for="ReturnToCheckout"/>
+                                    <partial name="_captchaInput"/>
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="comment-item">
+                                                <input asp-for="FullName" class="form-control" id="floatingInputName"
+                                                       placeholder="نام و نام خانوادگی خود را وارد کنید...">
+                                                <label for="floatingInputName" class="form-label label-float fw-bold font-16">
+                                                    نام و نام خانوادگی
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <span asp-validation-for="FullName" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="comment-item">
+                                                <input asp-for="PostCode" class="form-control" id="floatingInputLName"
+                                                       placeholder="کد پستی محل دریافت سفارشات را وارد کنید ...">
+                                                <label for="floatingInputLName" class="form-label label-float fw-bold">
+                                                    کد پستی
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <span asp-validation-for="FullName" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="comment-item">
+                                                <input asp-for="Address" class="form-control" id="floatingInputStreet" 
+                                                       placeholder="آدرس محل دریافت سفارشات را وارد کنید ...">
+                                                <label for="floatingInputStreet" class="form-label label-float fw-bold">
+                                                    آدرس
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <span asp-validation-for="FullName" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="comment-item">
+                                                <input asp-for="Email" class="form-control" id="floatingEmailStreet"
+                                                       placeholder="آدرس ایمیل خود را وارد کنید ...">
+                                                <label for="floatingEmailStreet" class="form-label label-float fw-bold">
+                                                    ایمیل
+                                                </label>
+                                                <span asp-validation-for="Email" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="comment-item">
+                                                <label for="province-select" class="label-float fw-bold">
+                                                    استان <span class="text-danger">*</span>
+                                                </label>
+
+                                                <select id="province-select" class="form-select">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="comment-item">
+                                                <label class="label-float fw-bold" for="city-select">
+                                                    شهر <span class="text-danger">*</span>
+                                                </label>
+
+                                                <select asp-for="UserCity" id="city-select" class="form-select">
+                                                    <option value="@Model.UserCity">@Model.UserCity</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <button type="submit" class="btn main-color-one-bg border-0">
+                                                    ویرایش پروفایل
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section SiteFooterSection
+{
+    <script src="/Site/js/cities.js"></script>
+    <partial name="_CaptchaScript" />
+}

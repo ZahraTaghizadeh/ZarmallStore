@@ -1,15 +1,16 @@
-﻿using ZarmallStore.Data.DTOS.Paging;
+﻿using ZarmallStore.Data.DTOs.Paging;
 using ZarmallStore.Data.Entities.ProductEntities;
 
-namespace ZarmallStore.Data.DTOS.ProductCategoryDto
+namespace ZarmallStore.Data.DTOs.ProductCategoryDto
 {
     public class FilterCategoryDto : BasePaging
     {
-        public long? CategoryId { get; set; }
+        public long? ParentId { get; set; }
         public string Title { get; set; }
         public string Url { get; set; }
         public FilterCategoryStatus CategoryStatus { get; set; }
         public List<ProductCategory> Data { get; set; }
+
         #region Methods
         public FilterCategoryDto SetData(List<ProductCategory> data)
         {
@@ -31,7 +32,6 @@ namespace ZarmallStore.Data.DTOS.ProductCategoryDto
         }
         #endregion
     }
-
     public enum FilterCategoryStatus
     {
         All,

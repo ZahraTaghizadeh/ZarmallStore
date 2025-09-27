@@ -6,6 +6,6 @@ namespace ZarmallStore.Data.Entities.ProductEntities
     {
         public string Title { get; set; }
         public string ColorCode { get; set; }
-        public ICollection<ProductVariant> ProductVariants4 { get; set; }
+        public ICollection<ProductVariant> ProductVariants { get; set; }
     }
 }

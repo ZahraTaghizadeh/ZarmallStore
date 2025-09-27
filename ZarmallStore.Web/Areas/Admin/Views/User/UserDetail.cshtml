@@ -1,0 +1,115 @@
+﻿@using ZarmallStore.Application.Utils
+@using ZarmallStore.Web.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ZarmallStore.Data.DTOs.Account.UserDetailDTO
+@{
+    ViewData["Title"] = "اطلاعات کاربر";
+}
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="user-sidebar">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="text-center">
+                            <h4 class="mt-4">@Model.FullName</h4>
+                            <div class="items-between w-75 mx-auto mt-4">
+                                <span>ID : @Model.Id</span>
+                                <span>@Model.MobileNumber</span>
+                            </div>
+                            <div class="mt-2">
+                                <div class="mt-4 mb-4" style="width: 100%">
+                                    <div class="user-detail-link">
+                                        <a asp-area="Admin" asp-controller="Order" asp-action="FilterOrders" asp-route-userId="@Model.Id">
+                                            <div class="items-between">
+                                                <span> سفارشات کاربر</span>
+                                                <i class="fa fa-chevron-left"></i>
+                                            </div>
+                                        </a>
+
+                                        <a asp-area="Admin" asp-controller="Permission" asp-action="AddRoleToUser" asp-route-userId="@Model.Id">
+                                            <div class="items-between">
+                                                <span>افزودن نقش</span>
+                                                <i class="fa fa-chevron-left"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">اطلاعات ثبت نام :</h4>
+                </div>
+                <div class="card-body">
+                    <p class="font-size-15 mb-1 items-between">
+                        <span class="text-dark-blue">تاریخ آپدیت حساب :</span>
+                        <span>@Model.LastUpdateDate.ToStringShamsiDate()</span>
+                    </p>
+
+                    <p class="font-size-15 mb-1 items-between">
+                        <span class="text-dark-blue">تاریخ  عضویت :</span>
+                        <span>@Model.CreateDate.ToString("HH:mm") @Model.CreateDate.ToStringShamsiDate()</span>
+                    </p>
+
+                    <p class="font-size-15 mb-1 items-between">
+                        <span class="text-dark-blue">کد فعالسازی موبایل :</span>
+                        <span>@Model.MobileActivationNumer</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">اطلاعات مکانی :</h4>
+                </div>
+                <div class="card-body">
+                    <p class="font-size-15 mb-1 items-between">
+                        <span class="text-dark-blue">استان و شهر : </span>
+                        @if (Model.City != null)
+                        {
+                            <span>@ProvinceFinder.GetProvince(Model.City) / @Model.City</span>
+
+                        }
+                        else
+                        {
+                            <span class="text-danger">اطلاعاتی یافت نشد</span>
+                        }
+                    </p>
+
+                    <p class="font-size-15 mb-1 items-between">
+                        <span class="text-dark-blue">آدرس :</span>
+                        @if (Model.Address != null)
+                        {
+                            <span>@Model.Address</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">اطلاعاتی یافت نشد</span>
+                        }
+                    </p>
+
+                    <p class="font-size-15 mb-1 items-between">
+                        <span class="text-dark-blue"> کد پستی :</span>
+                        @if (Model.PostCode != null)
+                        {
+                            <span>@Model.PostCode</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">اطلاعاتی یافت نشد</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

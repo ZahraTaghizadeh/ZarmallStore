@@ -1,0 +1,24 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <partial name="_AdminMetaTags" />
+    <partial name="_AdminHeaderRef" />
+    <title>@ViewData["Title"]</title>
+    @RenderSection("AdminHeaderSection", false)
+</head>
+<body data-layout="horizontal" data-layout-mode="" data-topbar="dark">
+    <div id="layout-wrapper">
+        @await Component.InvokeAsync("AdminHeader")
+        <div class="main-content">
+            <div class="page-content">
+                @RenderBody()
+            </div>
+            <partial name="_AdminFixMenu" />
+        </div>
+    </div>
+    <partial name="_AdminFooterRef" />
+    <partial name="_AdminMessages" />
+    <partial name="_AdminMobileMenu" />
+    @RenderSection("AdminFooterSection", false)
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿@model ZarmallStore.Data.DTOs.ProductDto.EditFeaturesDto
+<div class="row">
+    <input asp-for="FeatureId" type="hidden" />
+    <input asp-for="ProductId" type="hidden" />
+    <div class="mb-2 col-12 col-lg-8">
+        <label class="text-primary">عنوان</label>
+        <input class="form-control" type="text" asp-for="Title">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-2 col-12 col-lg-4">
+        <label class="text-primary">ترتیب نمایش</label>
+        <input class="form-control" type="text" asp-for="Order">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-2 col-12">
+        <label class="text-primary">مقدار</label>
+        <textarea rows="4" class="form-control" type="text" asp-for="Value"></textarea>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+</div>

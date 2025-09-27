@@ -1,0 +1,252 @@
+﻿@model ZarmallStore.Data.DTOs.ProductDto.FilterProductDto
+@using ZarmallStore.Application.Utils
+@using ZarmallStore.Data.DTOs.ProductDto
+@using ZarmallStore.Data.Entities.ProductEntities
+@{
+    ViewData["Title"] = "مدیریت محصولات";
+    var categories = (List<ProductCategory>)ViewData["Categories"]!;
+    var brands = (List<Brand>)ViewData["Brands"]!;
+}
+<form asp-area="Admin" asp-controller="Product" asp-action="FilterProducts" method="get" id="filter-form">
+    <input type="hidden" asp-for="PageId"/>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">لیست محصولات</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4 justify-content-start">
+                        <div class="">
+                            <button data-bs-toggle="modal" data-bs-target="#filterModal" type="button"
+                                    class="btn btn-primary waves-effect waves-light">
+                                <i class="bx bx-filter font-size-16 align-middle me-2"></i>فیلتر اطلاعات
+                            </button>
+
+                            <a asp-area="Admin" asp-controller="Product" asp-action="CreateProduct" class="btn btn-success">
+                                <i class="bx bx-plus font-size-16 align-middle me-2"></i>افزودن محصول
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="product-list" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row align-items-center">
+                                                        @if (Model.Data.Any())
+                                                        {
+                                                            var index = 1;
+                                                            <div class="table-responsive px-3">
+                                                                <table class="table align-middle table-nowrap">
+                                                                    <tbody>
+                                                                    <tr class="table-header-row">
+                                                                        <th style="border-radius: 0 10px 10px 0">#</th>
+                                                                        <th>تصویر</th>
+                                                                        <th>عنوان</th>
+                                                                        <th>دسته بندی</th>
+                                                                        <th>قیمت</th>
+                                                                        <th>تعداد موجودی</th>
+                                                                        <th>ID</th>
+                                                                        <th style="border-radius: 10px 0 0 10px">عملیات</th>
+                                                                    </tr>
+                                                                    @foreach (var product in Model.Data)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>
+                                                                                <p>@index</p>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <div class="avatar-lg me-4">
+                                                                                    <img src="@(PathExtension.ProductImageThumb + product.MainImageName)" class="img-fluid rounded" alt="@product.Title">
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <p class="mb-0">
+                                                                                    <a asp-area="Admin" asp-controller="Product" asp-action="ProductDetail"
+                                                                                       asp-route-productId="@product.Id" class="text-primary">@product.Title.LongString40()</a>
+                                                                                </p>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <div class="filter-product-category-list">
+                                                                                    @foreach (var category in product.SelectedCategories)
+                                                                                    {
+                                                                                        <span>@category.Category.Title</span>
+                                                                                    }
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <p class="mb-0">@product.BasePrice.ToRial()</p>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                @if (product.ProductVariants != null && product.ProductVariants.Any())
+                                                                                {
+                                                                                    <p class="mb-0">@product.ProductVariants.Sum(v => v.StockCount)</p>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <p class="mb-0">0</p>
+                                                                                }
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <p class="mb-0">@product.Id</p>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <div class="action-links">
+                                                                                    <a class="btn btn-warning btn-sm" asp-area="Admin" asp-controller="Product"
+                                                                                       asp-action="EditProduct" asp-route-productId="@product.Id">ویرایش </a>
+                                                                                    <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal-@product.Id">حذف</a>
+
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        index++;
+                                                                    }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="alert alert-primary" role="alert">
+                                                                <p class="mb-0">محصولی یافت نشد.</p>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <partial name="_AdminPaging" model="@Model.GetCurrentPaging()"/>
+
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+    </div>
+    <!-- end row -->
+    <!-- Scrollable modal -->
+    <div class="modal fade filter-modal" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">فیلتر محصولات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-2">
+                                <label for="title">عنوان محصول</label>
+                                <input asp-for="Title" class="form-control" type="text" id="title">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label for="title">دسته بندی محصول</label>
+                                <select asp-for="CategoryId" class="form-control" data-trigger="" id="choices-single-default" placeholder="دسته بندی محصول را انتخاب کنید">
+                                    <option value="">انتخاب کنید</option>
+                                    @if (categories.Any())
+                                    {
+                                        foreach (var category in categories.OrderBy(b => b.Title))
+                                        {
+                                            <option value="@category.Id">@category.Title</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label for="title">برند محصول</label>
+                                <select asp-for="BrandId" class="form-control" data-trigger="" id="choices-single-default" placeholder="برند محصول را انتخاب کنید">
+                                    <option value="">انتخاب کنید</option>
+                                    @if (brands.Any())
+                                    {
+                                        foreach (var brand in brands.OrderBy(b => b.Title))
+                                        {
+                                            <option value="@brand.Id">@brand.Title</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-2">
+                                <label for="title">وضعیت محصول</label>
+                                <select asp-items="@Html.GetEnumSelectList<FilterProductStatus>()" asp-for="ProductStatus" class="form-select"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-2">
+                                <label for="title">ترتیب نمایش</label>
+                                <select asp-items="@Html.GetEnumSelectList<FilterProductOrder>()" asp-for="ProductOrder" class="form-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">بستن</button>
+                    <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (Model.Data.Any())
+{
+    @foreach (var item in Model.Data)
+    {
+        <!-- Static Backdrop Modal -->
+        <div class="modal fade" id="deleteModal-@item.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">تایید حذف</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>آیا از حذف @item.Title مطمئن هستید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">خیر</button>
+                        <a asp-area="Admin" asp-controller="Product" asp-action="DeleteProduct"
+                           asp-route-productId="@item.Id" class="btn btn-primary">بله</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section AdminFooterSection
+{
+    <script src="/Admin/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="/Admin/js/pages/form-advanced.init.js"></script>
+}
+
+@section AdminHeaderSection
+{
+    <link href="/Admin/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" type="text/css" />
+}

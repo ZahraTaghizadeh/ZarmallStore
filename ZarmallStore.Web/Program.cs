@@ -19,6 +19,7 @@ builder.Services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddScoped<IUserService , UserService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 //Db configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

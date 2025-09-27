@@ -1,6 +1,6 @@
-﻿namespace ZarmallStore.Data.DTOS.Paging
+﻿namespace ZarmallStore.Data.DTOs.Paging
 {
-    public class Pager
+     public class Pager
     {
         public static BasePaging Build(int pageId, int allEntitiesCount, int take, int howManyShowPageAfterAndBefore)
         {

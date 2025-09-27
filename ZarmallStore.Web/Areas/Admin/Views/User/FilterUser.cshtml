@@ -1,0 +1,196 @@
+﻿@using ZarmallStore.Application.Utils
+@using ZarmallStore.Data.DTOs.Account
+@using ZarmallStore.Web.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FilterUserDto
+@{
+    ViewData["Title"] = "مدیریت کاربران";
+}
+
+<form asp-area="Admin" asp-controller="User" asp-action="FilterUser" method="get" id="filter-form">
+    <input type="hidden" asp-for="PageId" />
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">لیست محصولات</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4 justify-content-start">
+                        <div class="">
+                            <button data-bs-toggle="modal" data-bs-target="#filterModal" type="button"
+                                    class="btn btn-primary waves-effect waves-light">
+                                <i class="bx bx-filter font-size-16 align-middle me-2"></i>فیلتر اطلاعات
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="product-list" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row align-items-center">
+                                                        @if (Model.Data.Any())
+                                                        {
+                                                            var index = 1;
+                                                            <div class="table-responsive px-3">
+                                                                <table class="table align-middle table-nowrap">
+                                                                    <tbody>
+                                                                        <tr class="table-header-row">
+                                                                            <th style="border-radius: 0 10px 10px 0">#</th>
+                                                                            <th>نام و نام خانودگی</th>
+                                                                            <th>شماره موبایل</th>
+                                                                            <th>استان / شهر</th>
+                                                                            <th>بلاک شده</th>
+                                                                            <th>تاریخ عضویت</th>
+                                                                            <th style="border-radius: 10px 0 0 10px">شناسه کاربری</th>
+                                                                        </tr>
+                                                                        @foreach (var user in Model.Data)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <span>@index</span>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <p class="mb-0">
+                                                                                        @if (user.FullName != null)
+                                                                                        {
+                                                                                            <a asp-area="Admin" asp-controller="User" asp-action="UserDetail"
+                                                                                               asp-route-userId="@user.Id" class="text-primary">@user.FullName.LongString40()</a>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <a asp-area="Admin" asp-controller="User" asp-action="UserDetail"
+                                                                                               asp-route-userId="@user.Id" class="text-primary">@user.MobileNumber</a>
+                                                                                        }
+                                                                                    </p>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <span>@user.MobileNumber</span>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    @if (user.UserCity != null)
+                                                                                    {
+                                                                                        <span>@ProvinceFinder.GetProvince(user.UserCity) / @user.UserCity</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span class="text-danger">تکمیل نشده</span>
+                                                                                    }
+                                                                                </td>
+
+                                                                                @if (user.BlockUser)
+                                                                                {
+                                                                                    <td class="text-success"><i class="fa fa-check-circle"></i></td>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <td class="text-danger"><i class="fa fa-times-circle"></i></td>
+                                                                                }
+
+                                                                                <td>
+                                                                                    <span>@user.CreateDate.ToShamsiDate()</span>
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    <p class="mb-0">@user.Id</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                            index++;
+                                                                        }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="alert alert-primary" role="alert">
+                                                                <p class="mb-0">کاربری یافت نشد.</p>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <partial name="_AdminPaging" model="@Model.GetCurrentPaging()" />
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+    </div>
+    <!-- end row -->
+    <!-- Scrollable modal -->
+    <div class="modal fade filter-modal" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">فیلتر کاربران</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-2">
+                                <label>نام یا نام خانوادگی</label>
+                                <input asp-for="FullName" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-2">
+                                <label>شناسه کاربری</label>
+                                <input asp-for="UserId" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="mb-2">
+                                <label>وضعیت کاربر</label>
+                                <select asp-items="@Html.GetEnumSelectList<FilterUserState>()" asp-for="UserState" class="form-select"></select>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-4">
+                                <label>استان</label>
+                                <select id="province-select" class="form-select">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-4">
+                                <label>شهر</label>
+                                <select asp-for="City" id="city-select" class="form-select">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">بستن</button>
+                    <button type="submit" class="btn btn-primary">اعمال فیلتر</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section AdminFooterSection
+{
+    <script src="/Admin/js/cities.js"></script>
+}

@@ -1,0 +1,132 @@
+﻿@using ZarmallStore.Application.Utils
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<ZarmallStore.Data.Entities.Account.Role>
+@{
+    ViewData["Title"] = "نقش ها";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">لیست نقش ها</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4 justify-content-start">
+                    <div class="">
+                        <a asp-area="Admin" asp-controller="Permission" asp-action="CreateRole" class="btn btn-success">
+                            <i class="bx bx-plus font-size-16 align-middle me-2"></i>افزودن نقش
+                        </a>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="product-list" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                    @if (Model.Any())
+                                                    {
+                                                        var index = 1;
+                                                        <div class="table-responsive px-3">
+                                                            <table class="table align-middle table-nowrap">
+                                                                <tbody>
+                                                                    <tr class="table-header-row">
+                                                                        <th style="border-radius: 0 10px 10px 0">#</th>
+                                                                        <th>عنوان</th>
+                                                                        <th>دسترسی ها</th>
+                                                                        <th>تاریخ ویرایش</th>
+                                                                        <th style="border-radius: 10px 0 0 10px">عملیات</th>
+                                                                    </tr>
+                                                                    @foreach (var role in Model.OrderByDescending(r => r.CreateDate))
+                                                                    {
+                                                                        <tr>
+                                                                            <td>
+                                                                                @index)
+                                                                            </td>
+                                                                            <td>
+                                                                                <div>
+                                                                                    <p>@role.RoleTitle</p>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <div>
+                                                                                    @foreach (var permission in role.RolePermissions)
+                                                                                    {
+                                                                                        <span class="inline-item-dash">@permission.Permission.Title</span>
+                                                                                    }
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <div>
+                                                                                    <span>@role.CreateDate.ToStringShamsiDate()</span>
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <div class="action-links">
+                                                                                    @if (role.Id != 1)
+                                                                                    {
+                                                                                        <a asp-area="Admin" asp-controller="Permission" asp-action="EditRole" asp-route-roleId="@role.Id" class="px-2 btn btn-sm btn-warning">ویرایش</a>
+                                                                                        <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal-@role.Id">حذف</a>
+                                                                                    }
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        index++;
+                                                                    }
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="alert alert-primary" role="alert">
+                                                            <p class="mb-0">دیتایی یافت نشد.</p>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (Model.Any())
+{
+    @foreach (var item in Model)
+    {
+        <!-- Static Backdrop Modal -->
+        <div class="modal fade" id="deleteModal-@item.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">تایید حذف</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>آیا از حذف @item.RoleTitle مطمئن هستید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">خیر</button>
+                        <a asp-area="Admin" asp-controller="Permission" asp-action="DeleteRole"
+                           asp-route-colorId="@item.Id" class="btn btn-primary">بله</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
